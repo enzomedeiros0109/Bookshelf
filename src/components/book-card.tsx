@@ -13,8 +13,7 @@ const progress = 67
 
 const BookCard = (props: Props) => {
   return (
-    <div>
-      <Card className="grid grid-cols-2 w-110 shadow-lg">
+      <Card className="grid grid-cols-2 w-full shadow-lg transform transition-all hover:scale-105 duration-300">
         <div className="px-4">
           <img
             src={BookImage}
@@ -32,12 +31,6 @@ const BookCard = (props: Props) => {
               </div>
             </>
           ))}
-
-          {/* <div className="flex justify-between items-center mt-auto">
-            <p>Progress</p>
-            <p>65%</p>
-          </div>
-          <div className="w-full h-2 bg-accent rounded-2xl"></div> */}
 
           <div className="mt-auto space-y-2">
             <div className="flex items-center justify-between">
@@ -60,7 +53,6 @@ const BookCard = (props: Props) => {
           </div>
         </div>
       </Card>
-    </div>
   )
 }
 
