@@ -1,5 +1,5 @@
-import BookCard from "../book-card"
-import SortBy from "./sort-by"
+import BookCard from "../../book-card"
+import SortBy from "../sort-by"
 
 type Props = {}
 
@@ -15,7 +15,7 @@ const CurrentlyReading = (props: Props) => {
          </div>
          <div className="grid grid-cols-3 gap-8">
 
-            {Array.from({ length: 9 }).map((_, index) => (
+            {Array.from({ length: 5 }).map((_, index) => (
                <BookCard />
             ))}
          </div>

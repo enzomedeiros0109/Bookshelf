@@ -7,27 +7,13 @@ import AppSideBarFooter from "./app-sidebar-footer"
 type Props = {}
 
 const items = [
-   {
-      title: "All Books",
-      icon: Book,
-   },
-   {
-      title: "Currently Reading",
-      icon: BookOpen,
-   },
-   {
-      title: "Want to Read",
-      icon: Bookmark,
-   },
-   {
-      title: "Read",
-      icon: Check,
-   },
-   {
-      title: "Favorites",
-      icon: Star,
-   }
+   { title: "All Books", icon: Book, path: "/all-books" },
+   { title: "Currently Reading", icon: BookOpen, path: "/currently-reading" },
+   { title: "Want to Read", icon: Bookmark, path: "/want-to-read" },
+   { title: "Read", icon: Check, path: "/read" },
+   { title: "Favorites", icon: Star, path: "/favorites" },
 ]
+
 
 const AppSideBar = (props: Props) => {
    return (
@@ -46,24 +32,19 @@ const AppSideBar = (props: Props) => {
                <SidebarMenu className="mt-4 gap-1">
                   {items.map((option) => (
                      <SidebarMenuItem
-                        key={option.title}
+                        key={option.path}
                      >
-                        {option.title === "All Books" ? (
-                           <Link to="/all-books" className="flex transform transition-all duration-500 min-h-12 w-full items-center gap-4 px-2 hover:bg-accent/25 hover:text-accent hover:scale-110 hover:border-l-4 hover:border-accent">
-                              <option.icon aria-hidden="true" className="size-5" />
-                              <p>{option.title}</p>
-                           </Link>
-                        ) : (
-                           <a href="" className="flex transform transition-all duration-500 min-h-12 w-full items-center gap-4 px-2 hover:bg-accent/25 hover:text-accent hover:scale-110 hover:border-l-4 hover:border-accent">
-                              <option.icon aria-hidden="true" className="size-5" />
-                              <p>{option.title}</p>
-                           </a>
-                        )}
+                        <Link to={option.path} className="flex transform transition-all duration-500 min-h-12 w-full items-center gap-4 px-2 hover:bg-accent/25 hover:text-accent hover:scale-110 hover:border-l-4 hover:border-accent">
+                           <option.icon aria-hidden="true" className="size-5 shrink-0" />
+                           <p>{option.title}</p>
+                        </Link>
+
                      </SidebarMenuItem>
                   ))}
                </SidebarMenu>
             </nav>
          </SidebarContent>
+
          <SidebarFooter className="pb-8">
             <SidebarMenu>
                <SidebarMenuItem>
