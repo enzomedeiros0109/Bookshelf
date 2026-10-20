@@ -8,6 +8,7 @@ import CurrentlyReading from './components/layout/outlets/currently-reading'
 import Favorites from './components/layout/outlets/favorites'
 import Read from './components/layout/outlets/read'
 import WantToRead from './components/layout/outlets/want-to-read'
+import Login from './pages/login'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,8 +23,10 @@ function App() {
           <Route path="/want-to-read" element={<WantToRead />} />
           <Route path="/read" element={<Read />} />
           <Route path="/favorites" element={<Favorites />} />
+
         </Route>
 
+        <Route path='/login' element={<Login />} />
         <Route path='/' element={<Landing />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
