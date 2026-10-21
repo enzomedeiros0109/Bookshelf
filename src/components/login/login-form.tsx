@@ -1,18 +1,27 @@
-import { ArrowRight } from 'lucide-react'
+import { loginSchema } from '@/schemas/login-schema'
+import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import type z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type Props = {}
 
-type LoginFields = {
-  email: string,
-  password: string,
-}
+type LoginFields = z.infer<typeof loginSchema>
 
-const LoginForm = ({}: Props) => {
+const LoginForm = ({ }: Props) => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<LoginFields>(
+    {
+      resolver: zodResolver(loginSchema)
+    }
+  )
 
-  const onSubmit: SubmitHandler<LoginFields> = (data) => {
+  const onSubmit: SubmitHandler<LoginFields> = async (data) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     console.log(data)
   }
 
@@ -25,26 +34,21 @@ const LoginForm = ({}: Props) => {
 
         <div className='flex flex-col gap-2'>
           <p className='font-bold'>Email</p>
-          <input {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Enter a valid email format"
-            }
-          })} type="text" placeholder="you@email.com"
+          <input
+            {...register("email")}
+            type="text"
+            placeholder="you@email.com"
             className='bg-white p-3 border rounded-sm'
           />
           {errors.email && <span className=' text-sm text-destructive font-semibold'>{errors.email.message}</span>}
         </div>
+
         <div className='flex flex-col gap-2'>
           <p className='font-bold'>Password</p>
-          <input {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must have at least 8 characters"
-            },
-          })} type="password" placeholder="Enter your password"
+          <input
+            {...register("password")}
+            type="password"
+            placeholder="Enter your password"
             className='bg-white p-3 border rounded-sm'
           />
           {errors.password && <span className=' text-sm text-destructive font-semibold'>{errors.password.message}</span>}
@@ -56,11 +60,11 @@ const LoginForm = ({}: Props) => {
           </button>
         </div>
 
-        <button type="submit"
-          className='flex items-center justify-center gap-2 p-2 bg-accent/95 rounded-sm'
+        <button disabled={isSubmitting} type="submit"
+          className='flex items-center justify-center cursor-pointer gap-2 p-2 bg-accent/95 rounded-sm'
         >
-          <p className='text-base font-semibold'>Log In</p>
-          <ArrowRight className='size-4' />
+          <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Log in</p>
+          {isSubmitting ? <LoaderCircle className='animate-spin size-6' /> : <ArrowRight className='size-4' />}
         </button>
 
       </form>

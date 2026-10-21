@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Home from './pages/home'
 import { Route, Routes } from 'react-router'
 import NotFound from './pages/not-found'
@@ -10,6 +9,7 @@ import Read from './components/layout/home-outlets/read'
 import WantToRead from './components/layout/home-outlets/want-to-read'
 import Login from './pages/login'
 import LoginForm from './components/login/login-form'
+import SignUpForm from './components/login/sign-up-form'
 
 function App() {
 
@@ -28,7 +28,7 @@ function App() {
 
         <Route element={<Login />} >
           <Route path='/login' element={<LoginForm />} />
-          <Route path='/sign-up' element={<LoginForm />} />
+          <Route path='/sign-up' element={<SignUpForm />} />
           <Route path='/forgot-password' element={<LoginForm />} />
           <Route path='/forgot-password/email-code' element={<LoginForm />} />
         </Route>
