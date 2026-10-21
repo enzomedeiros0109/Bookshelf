@@ -10,6 +10,7 @@ import WantToRead from './components/layout/home-outlets/want-to-read'
 import Login from './pages/login'
 import LoginForm from './components/login/login-form'
 import SignUpForm from './components/login/sign-up-form'
+import ForgotPasswordForm from './components/login/forgot-password'
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
         <Route element={<Login />} >
           <Route path='/login' element={<LoginForm />} />
           <Route path='/sign-up' element={<SignUpForm />} />
-          <Route path='/forgot-password' element={<LoginForm />} />
+          <Route path='/forgot-password' element={<ForgotPasswordForm />} />
           <Route path='/forgot-password/email-code' element={<LoginForm />} />
         </Route>
         <Route path='/' element={<Landing />} />

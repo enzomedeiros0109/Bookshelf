@@ -3,12 +3,15 @@ import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import type z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router'
 
 type Props = {}
 
 type LoginFields = z.infer<typeof loginSchema>
 
 const LoginForm = ({ }: Props) => {
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -71,7 +74,11 @@ const LoginForm = ({ }: Props) => {
 
       <div className='flex gap-2 items-center justify-center'>
         <p className='text-sm text-white brightness-50'>Don't have an account?</p>
-        <button>
+        <button
+          onClick={() => {
+            navigate('/sign-up')
+          }}
+        >
           <p className='text-right text-sm text-accent font-bold cursor-pointer'>Sign up</p>
         </button>
       </div>

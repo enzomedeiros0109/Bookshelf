@@ -2,6 +2,7 @@ import { signUpSchema } from '@/schemas/sign-up-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 import type z from 'zod'
 
 type Props = {}
@@ -9,6 +10,8 @@ type Props = {}
 type SignUpFields = z.infer<typeof signUpSchema>
 
 const SignUpForm = ({ }: Props) => {
+
+   const navigate = useNavigate()
 
    const {
       register,
@@ -32,7 +35,7 @@ const SignUpForm = ({ }: Props) => {
    return (
       <div className="flex flex-col gap-4 py-20 px-10">
          <h1 className='text-6xl font-bold'>Create account</h1>
-         <h2 className='text-xl text-white font-normal brightness-60'>Sign in to continue to your library.</h2>
+         <h2 className='text-xl text-white font-normal brightness-60'>Start building your personal digital library.</h2>
 
          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 
@@ -97,7 +100,11 @@ const SignUpForm = ({ }: Props) => {
 
          <div className='flex gap-2 items-center justify-center'>
             <p className='text-sm text-white brightness-50'>Already have an account?</p>
-            <button>
+            <button
+               onClick={() => {
+                  navigate('/login')
+               }}
+            >
                <p className='text-right text-sm text-accent font-bold cursor-pointer'>Log in</p>
             </button>
          </div>
