@@ -11,6 +11,7 @@ import Login from './pages/login'
 import LoginForm from './components/login/login-form'
 import SignUpForm from './components/login/sign-up-form'
 import ForgotPasswordForm from './components/login/forgot-password'
+import CheckEmail from './components/login/check-email'
 
 function App() {
 
@@ -31,7 +32,7 @@ function App() {
           <Route path='/login' element={<LoginForm />} />
           <Route path='/sign-up' element={<SignUpForm />} />
           <Route path='/forgot-password' element={<ForgotPasswordForm />} />
-          <Route path='/forgot-password/email-code' element={<LoginForm />} />
+          <Route path='/forgot-password/check-email' element={<CheckEmail />} />
         </Route>
         <Route path='/' element={<Landing />} />
         <Route path='*' element={<NotFound />} />

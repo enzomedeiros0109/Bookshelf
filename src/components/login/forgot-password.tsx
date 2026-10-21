@@ -31,7 +31,7 @@ const ForgotPasswordForm = ({ }: Props) => {
   return (
     <div className="flex flex-col gap-4 py-20 px-10">
       <h1 className='text-6xl font-bold'>Forgot Password</h1>
-      <h2 className='text-xl text-white font-normal brightness-60'>Enter your email to receive a code</h2>
+      <h2 className='text-xl text-white font-normal brightness-60'>Enter your email to reset link</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 
@@ -49,7 +49,7 @@ const ForgotPasswordForm = ({ }: Props) => {
         <button disabled={isSubmitting} type="submit"
           className='flex items-center justify-center cursor-pointer gap-2 p-2 bg-accent/95 rounded-sm'
         >
-          <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Send code</p>
+          <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Send reset link</p>
           {isSubmitting ? <LoaderCircle className='animate-spin size-6' /> : <ArrowRight className='size-4' />}
         </button>
 
