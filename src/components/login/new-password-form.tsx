@@ -1,9 +1,7 @@
-import { loginSchema } from '@/schemas/login-schema'
 import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import type z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router'
 import { passwordSchema } from '@/schemas/password-schema'
 import { useState } from 'react'
 import PasswordUpdated from './password-updated'
@@ -66,7 +64,7 @@ const NewPasswordForm = ({ }: Props) => {
             type="submit"
             className='flex items-center justify-center cursor-pointer gap-2 p-3 bg-accent/95 rounded-sm'
             onClick={() => {
-
+              setIsPasswordCreated(true)
             }}
           >
             <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Change password</p>
