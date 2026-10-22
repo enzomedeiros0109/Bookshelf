@@ -1,16 +1,20 @@
-import { useState } from 'react'
 import Home from './pages/home'
 import { Route, Routes } from 'react-router'
 import NotFound from './pages/not-found'
 import Landing from './pages/landing'
-import AllBooks from './components/layout/outlets/all-books'
-import CurrentlyReading from './components/layout/outlets/currently-reading'
-import Favorites from './components/layout/outlets/favorites'
-import Read from './components/layout/outlets/read'
-import WantToRead from './components/layout/outlets/want-to-read'
+import AllBooks from './components/layout/home-outlets/all-books'
+import CurrentlyReading from './components/layout/home-outlets/currently-reading'
+import Favorites from './components/layout/home-outlets/favorites'
+import Read from './components/layout/home-outlets/read'
+import WantToRead from './components/layout/home-outlets/want-to-read'
+import Login from './pages/login'
+import LoginForm from './components/login/login-form'
+import SignUpForm from './components/login/sign-up-form'
+import ForgotPasswordForm from './components/login/forgot-password'
+import CheckEmail from './components/login/check-email'
+import NewPasswordForm from './components/login/new-password-form'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className='min-h-screen bg-background'>
@@ -22,8 +26,16 @@ function App() {
           <Route path="/want-to-read" element={<WantToRead />} />
           <Route path="/read" element={<Read />} />
           <Route path="/favorites" element={<Favorites />} />
+
         </Route>
 
+        <Route element={<Login />} >
+          <Route path='/login' element={<LoginForm />} />
+          <Route path='/sign-up' element={<SignUpForm />} />
+          <Route path='/forgot-password' element={<ForgotPasswordForm />} />
+          <Route path='/forgot-password/check-email' element={<CheckEmail />} />
+          <Route path='/forgot-password/new-password' element={<NewPasswordForm />} />
+        </Route>
         <Route path='/' element={<Landing />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
