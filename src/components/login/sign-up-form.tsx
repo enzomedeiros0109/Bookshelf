@@ -1,15 +1,26 @@
+import { supabase } from '@/lib/supabase-client'
 import { signUpSchema } from '@/schemas/sign-up-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, LoaderCircle } from 'lucide-react'
+import { useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import type z from 'zod'
+import type { User } from '@supabase/supabase-js'
+
 
 type Props = {}
 
 type SignUpFields = z.infer<typeof signUpSchema>
 
 const SignUpForm = ({ }: Props) => {
+
+   // Supabase variables
+
+   const [fullName, setFullName] = useState("")
+   const [email, setEmail] = useState("")
+   const [password, setPassword] = useState("")
+   const [user, setUser] = useState<User | null>(null)
 
    const navigate = useNavigate()
 
@@ -21,15 +32,26 @@ const SignUpForm = ({ }: Props) => {
          resolver: zodResolver(signUpSchema)
       })
 
-   const onSubmit: SubmitHandler<SignUpFields> = async (data) => {
-      try {
-         await new Promise((resolve) => setTimeout(resolve, 2000))
-         console.log(data)
-      } catch (error) {
-         setError("email", {
-            message: "This email is already taken",
-         })
+   const onSubmit: SubmitHandler<SignUpFields> = async (formData) => {
+      const { data, error } = await supabase.auth.signUp({
+
+         email: formData.email,
+         password: formData.password,
+         options: {
+            data: {
+               full_name: formData.fullName.trim()
+            }
+         }
+      })
+
+      if (error) {
+         setError('root', { type: 'server', message: error.message })
+         return
       }
+
+      setUser(data.user)
+
+      if (user) return navigate('/login')
    }
 
    return (
@@ -44,6 +66,8 @@ const SignUpForm = ({ }: Props) => {
                <input
                   {...register("fullName")}
                   type="text"
+                  value={fullName}
+                  onChange={fullName => setFullName(fullName.target.value)}
                   placeholder="Enter your full name"
                   className='bg-white p-3 border rounded-sm'
                />
@@ -55,6 +79,8 @@ const SignUpForm = ({ }: Props) => {
                <input
                   {...register("email")}
                   type="text"
+                  value={email}
+                  onChange={email => setEmail(email.target.value)}
                   placeholder="you@email.com"
                   className='bg-white p-3 border rounded-sm'
                />
@@ -66,6 +92,8 @@ const SignUpForm = ({ }: Props) => {
                <input
                   {...register("password")}
                   type="password"
+                  value={password}
+                  onChange={password => setPassword(password.target.value)}
                   placeholder="Enter your password"
                   className='bg-white p-3 border rounded-sm'
                />
@@ -81,12 +109,6 @@ const SignUpForm = ({ }: Props) => {
                   className='bg-white p-3 border rounded-sm'
                />
                {errors.confirmPassword?.message && <span className=' text-sm text-destructive font-semibold'>{errors.confirmPassword?.message}</span>}
-            </div>
-
-            <div className='flex justify-start items-center'>
-               <button>
-                  <p className='text-right text-sm text-accent font-bold underline cursor-pointer'>Forgot password?</p>
-               </button>
             </div>
 
             <button disabled={isSubmitting} type="submit"

@@ -3,19 +3,21 @@ import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import type z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { supabase } from '@/lib/supabase-client'
+import { useEffect } from 'react'
 
 type Props = {}
 
 type LoginFields = z.infer<typeof loginSchema>
 
 const LoginForm = ({ }: Props) => {
-
   const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting }
   } = useForm<LoginFields>(
     {
@@ -23,10 +25,29 @@ const LoginForm = ({ }: Props) => {
     }
   )
 
-  const onSubmit: SubmitHandler<LoginFields> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log(data)
+  const onSubmit: SubmitHandler<LoginFields> = async (formData) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    })
+
+    if (error) {
+      setError('root', { type: 'server', message: error.message })
+      return
+    }
+
+    navigate('/all-books')
   }
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'INITIAL_SESSION' && session) {
+        navigate('/all-books', { replace: true })
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [navigate])
 
   return (
     <div className="flex flex-col gap-4 py-20 px-10">
@@ -58,13 +79,11 @@ const LoginForm = ({ }: Props) => {
         </div>
 
         <div className='flex justify-start items-center'>
-          <button
-          onClick={() => {
-            navigate('/forgot-password')
-          }}
+          <Link
+            to="/forgot-password"
           >
             <p className='text-right text-sm text-accent font-bold underline cursor-pointer'>Forgot password?</p>
-          </button>
+          </Link>
         </div>
 
         <button disabled={isSubmitting} type="submit"
