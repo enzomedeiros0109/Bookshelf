@@ -26,6 +26,7 @@ const ForgotPasswordForm = ({ }: Props) => {
   const onSubmit: SubmitHandler<emailField> = async (data) => {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     console.log(data)
+    navigate('/forgot-password/check-email')
   }
 
   return (

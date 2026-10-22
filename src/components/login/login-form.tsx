@@ -58,7 +58,11 @@ const LoginForm = ({ }: Props) => {
         </div>
 
         <div className='flex justify-start items-center'>
-          <button>
+          <button
+          onClick={() => {
+            navigate('/forgot-password')
+          }}
+          >
             <p className='text-right text-sm text-accent font-bold underline cursor-pointer'>Forgot password?</p>
           </button>
         </div>
