@@ -11,7 +11,7 @@ const Home = (props: Props) => {
       <SidebarProvider>
         <AppSideBar />
         <main className='min-w-0 flex-1'>
-          <Header />
+            <Header />
           <Outlet />
         </main>
       </SidebarProvider>
