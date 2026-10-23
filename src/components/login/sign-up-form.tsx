@@ -2,11 +2,9 @@ import { supabase } from '@/lib/supabase-client'
 import { signUpSchema } from '@/schemas/sign-up-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, LoaderCircle } from 'lucide-react'
-import { useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import type z from 'zod'
-import type { User } from '@supabase/supabase-js'
 
 
 type Props = {}
@@ -16,11 +14,6 @@ type SignUpFields = z.infer<typeof signUpSchema>
 const SignUpForm = ({ }: Props) => {
 
    // Supabase variables
-
-   const [fullName, setFullName] = useState("")
-   const [email, setEmail] = useState("")
-   const [password, setPassword] = useState("")
-   const [user, setUser] = useState<User | null>(null)
 
    const navigate = useNavigate()
 
@@ -33,7 +26,7 @@ const SignUpForm = ({ }: Props) => {
       })
 
    const onSubmit: SubmitHandler<SignUpFields> = async (formData) => {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
 
          email: formData.email,
          password: formData.password,
@@ -49,9 +42,7 @@ const SignUpForm = ({ }: Props) => {
          return
       }
 
-      setUser(data.user)
-
-      if (user) return navigate('/login')
+      navigate('/login')
    }
 
    return (
@@ -61,17 +52,21 @@ const SignUpForm = ({ }: Props) => {
 
          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 
+            {errors.root?.message && (
+               <p role="alert" className="text-sm text-destructive font-semibold">
+                  {errors.root.message}
+               </p>
+            )}
+
             <div className='flex flex-col gap-2'>
                <p className='font-bold'>Full name</p>
                <input
                   {...register("fullName")}
                   type="text"
-                  value={fullName}
-                  onChange={fullName => setFullName(fullName.target.value)}
                   placeholder="Enter your full name"
                   className='bg-white p-3 border rounded-sm'
                />
-               {errors.email && <span className=' text-sm text-destructive font-semibold'>{errors.fullName?.message}</span>}
+               {errors.fullName && <span className=' text-sm text-destructive font-semibold'>{errors.fullName?.message}</span>}
             </div>
 
             <div className='flex flex-col gap-2'>
@@ -79,8 +74,6 @@ const SignUpForm = ({ }: Props) => {
                <input
                   {...register("email")}
                   type="text"
-                  value={email}
-                  onChange={email => setEmail(email.target.value)}
                   placeholder="you@email.com"
                   className='bg-white p-3 border rounded-sm'
                />
@@ -92,8 +85,6 @@ const SignUpForm = ({ }: Props) => {
                <input
                   {...register("password")}
                   type="password"
-                  value={password}
-                  onChange={password => setPassword(password.target.value)}
                   placeholder="Enter your password"
                   className='bg-white p-3 border rounded-sm'
                />

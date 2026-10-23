@@ -1,4 +1,4 @@
-import { CreditCardIcon, LogOutIcon, SettingsIcon, User, UserIcon } from "lucide-react"
+import { LogOutIcon, SettingsIcon, User, UserIcon } from "lucide-react"
 import SearchBar from "./search-bar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { supabase } from "@/lib/supabase-client"
@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleLogOut = async () => {
 
-    const { error } = await supabase.auth.signOut({scope: 'local'})
+    const { error } = await supabase.auth.signOut({ scope: 'local' })
 
     if (error) return error.message
 
@@ -37,13 +37,13 @@ const Header = () => {
             Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" className="cursor-pointer">
-            <button
-              onClick={handleLogOut}
-            >
-              <LogOutIcon />
-              Log out
-            </button>
+          <DropdownMenuItem
+            variant="destructive"
+            className="cursor-pointer"
+            onClick={handleLogOut}
+          >
+            <LogOutIcon />
+            Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
