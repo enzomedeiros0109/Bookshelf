@@ -40,6 +40,22 @@ const LoginForm = ({ }: Props) => {
   }
 
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('confirmed') === '1') {
+      let active = true
+
+      const finishConfirmation = async () => {
+        await supabase.auth.getSession()
+        if (!active) return
+
+        await supabase.auth.signOut({ scope: 'local' })
+        if (active) navigate('/login', { replace: true })
+      }
+
+      void finishConfirmation()
+
+      return () => { active = false }
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'INITIAL_SESSION' && session) {
         navigate('/all-books', { replace: true })
@@ -53,6 +69,12 @@ const LoginForm = ({ }: Props) => {
     <div className="flex flex-col gap-4 py-20 px-10">
       <h1 className='text-6xl font-bold'>Login</h1>
       <h2 className='text-xl text-white font-normal brightness-60'>Sign in to continue to your library.</h2>
+
+      {errors.root?.message && (
+        <p role="alert" className="text-sm text-destructive font-semibold">
+          {errors.root.message}
+        </p>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 

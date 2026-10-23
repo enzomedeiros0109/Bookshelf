@@ -5,6 +5,7 @@ import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import type z from 'zod'
+import { email } from 'zod'
 
 
 type Props = {}
@@ -12,8 +13,6 @@ type Props = {}
 type SignUpFields = z.infer<typeof signUpSchema>
 
 const SignUpForm = ({ }: Props) => {
-
-   // Supabase variables
 
    const navigate = useNavigate()
 
@@ -31,6 +30,7 @@ const SignUpForm = ({ }: Props) => {
          email: formData.email,
          password: formData.password,
          options: {
+            emailRedirectTo: `${window.location.origin}/login?confirmed=1`,
             data: {
                full_name: formData.fullName.trim()
             }
@@ -42,7 +42,7 @@ const SignUpForm = ({ }: Props) => {
          return
       }
 
-      navigate('/login')
+      navigate('/check-email', {state: {email: formData.email}})
    }
 
    return (

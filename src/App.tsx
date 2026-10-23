@@ -47,8 +47,9 @@ function App() {
           <Route element={<Login />} >
             <Route path='/login' element={<LoginForm />} />
             <Route path='/sign-up' element={<SignUpForm />} />
+            <Route path='/check-email' element={<CheckEmail isPasswordReset={false}/>} />
             <Route path='/forgot-password' element={<ForgotPasswordForm />} />
-            <Route path='/forgot-password/check-email' element={<CheckEmail />} />
+            <Route path='/forgot-password/check-email' element={<CheckEmail isPasswordReset={true}/>} />
             <Route path='/forgot-password/new-password' element={<NewPasswordForm />} />
           </Route>
           <Route path='/' element={<Landing />} />

@@ -1,12 +1,16 @@
 import { ArrowLeft, Info } from 'lucide-react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import BookCheckEmail from '../../assets/bookshelf_check_email_icon.svg'
 
-type Props = {}
+type Props = {
+   isPasswordReset: boolean
+}
 
-const CheckEmail = ({ }: Props) => {
+const CheckEmail = ({ isPasswordReset }: Props) => {
 
    const navigate = useNavigate()
+   const { state } = useLocation()
+   const email = state?.email ?? 'your email address'
 
    return (
       <div className="flex flex-col gap-3 justify-center items-center">
@@ -18,16 +22,33 @@ const CheckEmail = ({ }: Props) => {
          />
 
          <h1 className='text-5xl font-bold'>Check your email</h1>
-         <h2 className='text-lg text-white text-center font-normal brightness-20'>We've sent you a password reset link to you@example.com.</h2>
-         <h2 className='text-lg text-white text-center font-normal brightness-20'>Click the link in the email to set a new password.</h2>
+         {isPasswordReset ? (
+            <>
+               <h2 className='text-lg text-white text-center font-normal brightness-20'>We've sent you a password reset link to {email}.</h2>
+               <h2 className='text-lg text-white text-center font-normal brightness-20'>Click the link in the email to set a new password.</h2>
 
-         <div className='flex gap-2 p-4 items-center justify-start rounded-md bg-accent'>
-            <Info className='size-6 ' />
-            <div className='flex flex-col'>
-               <p className='text-sm'>The link will expire in one hour</p>
-               <p className='text-sm font-semibold'>If you don't see the email, check your spam folder</p>
-            </div>
-         </div>
+               <div className='flex gap-2 p-4 items-center justify-start rounded-md bg-accent'>
+                  <Info className='size-6 ' />
+                  <div className='flex flex-col'>
+                     <p className='text-sm'>The link will expire in one hour</p>
+                     <p className='text-sm font-semibold'>If you don't see the email, check your spam folder</p>
+                  </div>
+               </div>
+            </>
+         ) : (
+            <>
+               <h2 className='text-lg text-white text-center font-normal brightness-20'>We've sent you a verification link to {email}.</h2>
+               <h2 className='text-lg text-white text-center font-normal brightness-20'>Click the link in the email to verificate your account.</h2>
+
+               <div className='flex gap-2 p-4 items-center justify-start rounded-md bg-accent'>
+                  <Info className='size-6 ' />
+                  <div className='flex flex-col'>
+                     <p className='text-sm'>The link will expire in one hour</p>
+                     <p className='text-sm font-semibold'>If you don't see the email, check your spam folder</p>
+                  </div>
+               </div>
+            </>
+         )}
 
 
 
