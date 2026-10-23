@@ -1,4 +1,4 @@
-import { ArrowRight, LoaderCircle } from 'lucide-react'
+import { ArrowRight, Loader2Icon, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import type z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,7 +6,6 @@ import { passwordSchema } from '@/schemas/password-schema'
 import { useEffect, useState } from 'react'
 import PasswordUpdated from './password-updated'
 import { supabase } from '@/lib/supabase-client'
-import { useNavigate } from 'react-router'
 
 type Props = {}
 
@@ -16,9 +15,6 @@ const NewPasswordForm = ({ }: Props) => {
 
   const [isPasswordCreated, setIsPasswordCreated] = useState(false)
   const [isRecoverySession, setIsRecoverySession] = useState(false);
-
-  const navigate = useNavigate()
-
 
   const {
     register,
@@ -55,7 +51,7 @@ const NewPasswordForm = ({ }: Props) => {
   }
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoverySession(true);
       }
@@ -66,49 +62,56 @@ const NewPasswordForm = ({ }: Props) => {
 
   return (
 
-    isPasswordCreated ? <PasswordUpdated /> : (
-      <div className="flex flex-col gap-4 py-20 px-10">
-        <h1 className='text-6xl font-bold'>Create a new password</h1>
-        <h2 className='text-xl text-white font-normal brightness-60'>Choose a new password for yout account</h2>
+    isRecoverySession ? (
+      isPasswordCreated ? <PasswordUpdated /> : (
+        <div className="flex flex-col gap-4 py-20 px-10">
+          <h1 className='text-6xl font-bold'>Create a new password</h1>
+          <h2 className='text-xl text-white font-normal brightness-60'>Choose a new password for yout account</h2>
 
-        {errors.root?.message && (
-          <p role="alert" className="text-sm text-destructive font-semibold">
-            {errors.root.message}
-          </p>
-        )}
+          {errors.root?.message && (
+            <p role="alert" className="text-sm text-destructive font-semibold">
+              {errors.root.message}
+            </p>
+          )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 
-          <div className='flex flex-col gap-2'>
-            <p className='font-bold'>New Password</p>
-            <input
-              {...register("password")}
-              type="password"
-              placeholder="Enter your new password"
-              className='bg-white p-3 border rounded-sm'
-            />
-            {errors.password && <span className=' text-sm text-destructive font-semibold'>{errors.password.message}</span>}
-          </div>
+            <div className='flex flex-col gap-2'>
+              <p className='font-bold'>New Password</p>
+              <input
+                {...register("password")}
+                type="password"
+                placeholder="Enter your new password"
+                className='bg-white p-3 border rounded-sm'
+              />
+              {errors.password && <span className=' text-sm text-destructive font-semibold'>{errors.password.message}</span>}
+            </div>
 
-          <div className='flex flex-col gap-2'>
-            <p className='font-bold'>Confirm new password</p>
-            <input
-              {...register("confirmPassword")}
-              type="password"
-              placeholder="Enter your password"
-              className='bg-white p-3 border rounded-sm'
-            />
-            {errors.confirmPassword && <span className=' text-sm text-destructive font-semibold'>{errors.confirmPassword.message}</span>}
-          </div>
+            <div className='flex flex-col gap-2'>
+              <p className='font-bold'>Confirm new password</p>
+              <input
+                {...register("confirmPassword")}
+                type="password"
+                placeholder="Enter your password"
+                className='bg-white p-3 border rounded-sm'
+              />
+              {errors.confirmPassword && <span className=' text-sm text-destructive font-semibold'>{errors.confirmPassword.message}</span>}
+            </div>
 
-          <button disabled={isSubmitting}
-            type="submit"
-            className='flex items-center justify-center cursor-pointer gap-2 p-3 bg-accent/95 rounded-sm'
-          >
-            <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Change password</p>
-            {isSubmitting ? <LoaderCircle className='animate-spin size-6' /> : <ArrowRight className='size-4' />}
-          </button>
-        </form>
+            <button disabled={isSubmitting}
+              type="submit"
+              className='flex items-center justify-center cursor-pointer gap-2 p-3 bg-accent/95 rounded-sm'
+            >
+              <p className={`text-base font-semibold ${isSubmitting ? 'hidden' : ''}`}>Change password</p>
+              {isSubmitting ? <LoaderCircle className='animate-spin size-6' /> : <ArrowRight className='size-4' />}
+            </button>
+          </form>
+        </div>
+      )
+    ) : (
+      <div className='flex h-110 flex-col gap-4 items-center justify-center'>
+        <Loader2Icon className='size-10 animate-spin'/>
+        <p className='text-2xl text-white brightness-75'>Verifying session...</p>
       </div>
     )
   )

@@ -5,7 +5,6 @@ import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import type z from 'zod'
-import { email } from 'zod'
 
 
 type Props = {}

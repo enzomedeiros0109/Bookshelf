@@ -5,7 +5,7 @@ import { Outlet } from 'react-router'
 
 type Props = {}
 
-const Home = (props: Props) => {
+const Home = ({}: Props) => {
   return (
     <div >
       <SidebarProvider>

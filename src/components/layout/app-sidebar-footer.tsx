@@ -1,6 +1,6 @@
 type Props = {}
 
-const AppSideBarFooter = (props: Props) => {
+const AppSideBarFooter = ({}: Props) => {
    return (
       <div className='flex flex-col gap-2 p-2 font-bold border-t'>
          <h1 className="text-sm font-sans text-white brightness-60">READING GOAL</h1>

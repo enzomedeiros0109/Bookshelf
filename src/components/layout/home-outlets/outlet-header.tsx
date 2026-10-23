@@ -2,7 +2,7 @@ import SortBy from "../sort-by"
 
 type Props = {}
 
-const OutletHeader = (props: Props) => {
+const OutletHeader = ({}: Props) => {
    return (
       <div className="flex items-end justify-between">
          <div className="flex gap-4 items-end">
