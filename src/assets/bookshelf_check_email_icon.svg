@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="140" viewBox="0 0 160 140" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Check your email</title>
+  <desc id="desc">Warm terracotta envelope holding a cream letter with forest-green text marks, with botanical leaves and small accent lines.</desc>
+
+  <!-- Accent rays -->
+  <g stroke="#B45D34" stroke-width="2.6" stroke-linecap="round">
+    <path d="M108 8V20"/>
+    <path d="M126 15L119 24"/>
+  </g>
+
+  <!-- Botanical sprig behind the envelope -->
+  <g>
+    <path d="M55 115C47 105 42 91 35 69" stroke="#426B50" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M36 73C23 67 19 56 22 45C34 46 44 60 36 73Z" fill="#607F61"/>
+    <path d="M45 94C32 94 20 87 16 75C30 74 43 82 45 94Z" fill="#527958"/>
+    <path d="M52 115C41 118 30 113 25 105C39 101 49 105 52 115Z" fill="#688A67"/>
+    <path d="M39 74L30 58M45 94L28 85" stroke="#355F48" stroke-opacity=".52" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Envelope back -->
+  <path d="M49 62L86 37C89 35 92 35 95 37L132 62C134 63 135 65 135 68V122C135 126 132 129 128 129H52C48 129 45 126 45 122V68C45 65 46 63 49 62Z" fill="#A95F39"/>
+
+  <!-- Envelope's side folds, then its bottom flap -->
+  <path d="M45 68L90 104L45 127V68Z" fill="#C27A4C"/>
+  <path d="M135 68L90 104L135 127V68Z" fill="#B86D42"/>
+  <path d="M46 127L83 96L90 101L97 96L134 127C133 128 131 129 128 129H52C49 129 47 128 46 127Z" fill="#B97045"/>
+  <g stroke="#965733" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
+    <path d="M46 127L82 99"/>
+    <path d="M134 127L99 99"/>
+  </g>
+
+  <!-- Cream letter and folded corner -->
+  <path d="M59 28H109L130 49V93L91 119L56 92V31C56 29 57 28 59 28Z" fill="#F2DECA"/>
+  <path d="M109 28V49H130L109 28Z" fill="#FAECDC"/>
+  <path d="M109 28L130 49" stroke="#E8CEB5" stroke-width="1.2"/>
+
+  <!-- Text lines on the letter -->
+  <g fill="#2F5D50">
+    <rect x="68" y="55" width="29" height="5.8" rx="1.6"/>
+    <rect x="68" y="68" width="50" height="5.8" rx="1.6"/>
+    <rect x="68" y="81" width="35" height="5.8" rx="1.6"/>
+  </g>
+
+  <!-- Small leaf overlaps front of the envelope -->
+  <path d="M54 113C54 98 59 91 65 84C71 101 63 110 54 113Z" fill="#66865F"/>
+</svg>

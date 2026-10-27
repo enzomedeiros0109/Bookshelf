@@ -3,13 +3,13 @@ import OutletHeader from "./outlet-header"
 
 type Props = {}
 
-const CurrentlyReading = (props: Props) => {
+const Read = ({}: Props) => {
    return (
       <div className="flex flex-col gap-4 p-8">
          <OutletHeader />
          <div className="grid grid-cols-3 gap-8">
 
-            {Array.from({ length: 5 }).map((_, index) => (
+            {Array.from({ length: 5 }).map((_) => (
                <BookCard />
             ))}
          </div>
@@ -17,4 +17,4 @@ const CurrentlyReading = (props: Props) => {
    )
 }
 
-export default CurrentlyReading
+export default Read

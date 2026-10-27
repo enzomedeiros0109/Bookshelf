@@ -60,6 +60,7 @@
   /* Cards */
   --card: #ffffff;
   --card-foreground: #26352e;
+  --card-login: #fdfcfa;
 
   /* Popovers */
   --popover: #ffffff;
