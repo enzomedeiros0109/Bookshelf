@@ -10,10 +10,10 @@ const items = [
   { label: "Recently added", value: "recently-added" },
 ]
 
-const SortBy = (props: Props) => {
+const SortBy = ({}: Props) => {
    return (
       <Select items={items}>
-         <SelectTrigger className="w-[180px] bg-card">
+         <SelectTrigger className="w-45 bg-card">
             <SelectValue placeholder={`Sort By: ${items[0].label}`} />
          </SelectTrigger>
          <SelectContent>

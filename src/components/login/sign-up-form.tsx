@@ -1,9 +1,11 @@
+import { supabase } from '@/lib/supabase-client'
 import { signUpSchema } from '@/schemas/sign-up-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, LoaderCircle } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import type z from 'zod'
+
 
 type Props = {}
 
@@ -21,15 +23,25 @@ const SignUpForm = ({ }: Props) => {
          resolver: zodResolver(signUpSchema)
       })
 
-   const onSubmit: SubmitHandler<SignUpFields> = async (data) => {
-      try {
-         await new Promise((resolve) => setTimeout(resolve, 2000))
-         console.log(data)
-      } catch (error) {
-         setError("email", {
-            message: "This email is already taken",
-         })
+   const onSubmit: SubmitHandler<SignUpFields> = async (formData) => {
+      const { error } = await supabase.auth.signUp({
+
+         email: formData.email,
+         password: formData.password,
+         options: {
+            emailRedirectTo: `${window.location.origin}/login?confirmed=1`,
+            data: {
+               full_name: formData.fullName.trim()
+            }
+         }
+      })
+
+      if (error) {
+         setError('root', { type: 'server', message: error.message })
+         return
       }
+
+      navigate('/check-email', {state: {email: formData.email}})
    }
 
    return (
@@ -39,6 +51,12 @@ const SignUpForm = ({ }: Props) => {
 
          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 
+            {errors.root?.message && (
+               <p role="alert" className="text-sm text-destructive font-semibold">
+                  {errors.root.message}
+               </p>
+            )}
+
             <div className='flex flex-col gap-2'>
                <p className='font-bold'>Full name</p>
                <input
@@ -47,7 +65,7 @@ const SignUpForm = ({ }: Props) => {
                   placeholder="Enter your full name"
                   className='bg-white p-3 border rounded-sm'
                />
-               {errors.email && <span className=' text-sm text-destructive font-semibold'>{errors.fullName?.message}</span>}
+               {errors.fullName && <span className=' text-sm text-destructive font-semibold'>{errors.fullName?.message}</span>}
             </div>
 
             <div className='flex flex-col gap-2'>
@@ -81,12 +99,6 @@ const SignUpForm = ({ }: Props) => {
                   className='bg-white p-3 border rounded-sm'
                />
                {errors.confirmPassword?.message && <span className=' text-sm text-destructive font-semibold'>{errors.confirmPassword?.message}</span>}
-            </div>
-
-            <div className='flex justify-start items-center'>
-               <button>
-                  <p className='text-right text-sm text-accent font-bold underline cursor-pointer'>Forgot password?</p>
-               </button>
             </div>
 
             <button disabled={isSubmitting} type="submit"

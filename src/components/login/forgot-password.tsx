@@ -4,6 +4,7 @@ import type z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router'
 import { emailSchema } from '@/schemas/email-schema'
+import { supabase } from '@/lib/supabase-client'
 
 type Props = {}
 
@@ -16,6 +17,7 @@ const ForgotPasswordForm = ({ }: Props) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting }
   } = useForm<emailField>(
     {
@@ -24,15 +26,32 @@ const ForgotPasswordForm = ({ }: Props) => {
   )
 
   const onSubmit: SubmitHandler<emailField> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log(data)
-    navigate('/forgot-password/check-email')
+
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      data.email,
+      {
+        redirectTo: `${window.location.origin}/forgot-password/new-password`,
+      }
+    )
+
+    if (error) {
+      setError('root', { type: 'server', message: error.message })
+      return
+    }
+
+    navigate('/forgot-password/check-email', { state: { email: data.email } })
   }
 
   return (
     <div className="flex flex-col gap-4 py-20 px-10">
       <h1 className='text-6xl font-bold'>Forgot Password</h1>
       <h2 className='text-xl text-white font-normal brightness-60'>Enter your email to reset link</h2>
+
+      {errors.root?.message && (
+        <p role="alert" className="text-sm text-destructive font-semibold">
+          {errors.root.message}
+        </p>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 mt-auto'>
 

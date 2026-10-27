@@ -1,9 +1,8 @@
 import { LoaderCircle } from 'lucide-react'
-import React from 'react'
 
 type Props = {}
 
-const Landing = (props: Props) => {
+const Landing = ({}: Props) => {
    return (
       <div className='flex flex-col justify-center items-center min-h-screen'>
          LANDING PAGE

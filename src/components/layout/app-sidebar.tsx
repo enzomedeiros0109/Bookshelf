@@ -1,6 +1,6 @@
-import { Book, Bookmark, BookOpen, Check, Save, Star } from "lucide-react"
+import { Book, Bookmark, BookOpen, Check, Star } from "lucide-react"
 import { Link } from "react-router"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu, SidebarMenuItem } from "../ui/sidebar"
 import Logo from "./logo"
 import AppSideBarFooter from "./app-sidebar-footer"
 
@@ -15,7 +15,7 @@ const items = [
 ]
 
 
-const AppSideBar = (props: Props) => {
+const AppSideBar = ({}: Props) => {
    return (
       <Sidebar>
          <SidebarContent>
