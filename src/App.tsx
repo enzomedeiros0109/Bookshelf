@@ -3,6 +3,8 @@ import { supabase } from './lib/supabase-client'
 import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { AppRoutes } from './routes'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LoaderCircle } from 'lucide-react'
 
 function App() {
 
@@ -13,6 +15,8 @@ function App() {
     user: null,
     loading: true
   })
+
+  const queryClient = new QueryClient()
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -27,9 +31,16 @@ function App() {
 
   return (
     <div className='min-h-screen bg-background'>
-      <AuthContext.Provider value={authState}>
-        {authState.loading ? <div>Loading...</div> : <AppRoutes />}
-      </AuthContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContext.Provider value={authState}>
+          {authState.loading ? (
+            <div className='flex flex-col justify-center items-center min-h-screen'>
+              <LoaderCircle className='animate-spin size-10' />
+              Loading
+            </div>
+          ) : <AppRoutes />}
+        </AuthContext.Provider>
+      </QueryClientProvider>
     </div>
   )
 }
