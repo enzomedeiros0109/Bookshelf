@@ -56,13 +56,13 @@ const SearchBar = ({ className }: Props) => {
 
           {error && (
             <p className="p-3 text-sm text-destructive">
-              Book not available.
+              Book not found.
             </p>
           )}
 
           {!isFetching && !error && data?.length === 0 && (
             <p className="p-3 text-sm text-muted-foreground">
-              No books found.
+              Book not found.
             </p>
           )}
 

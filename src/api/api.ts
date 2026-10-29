@@ -1,9 +1,9 @@
 import { bookSchema } from '@/schemas/db/books-schema';
-import axios from 'axios'
+import axios from 'axios';
 import rateLimit from 'axios-rate-limit';
 
 const apiBase = axios.create({
-  baseURL: "https://www.googleapis.com/books/v1/",
+  baseURL: 'https://www.googleapis.com/books/v1/',
   params: {
     key: import.meta.env.VITE_GOOGLE_BOOKS_API_KEY,
   },
@@ -11,14 +11,15 @@ const apiBase = axios.create({
 
 const api = rateLimit(apiBase, {
   maxRequests: 1,
-  perMilliseconds: 1000
-})
+  perMilliseconds: 1000,
+});
 
 export async function getBooks(query: string) {
   try {
-    const { data } = await api.get("/volumes", {
+    const { data } = await api.get('/volumes', {
       params: {
-        q: query,
+        q: `intitle:${query}`,
+        langRestrict: 'en',
         maxResults: 20,
       },
     });
@@ -35,18 +36,16 @@ export async function getBooks(query: string) {
           authors: info.authors ?? [],
           genres: info.categories ?? [],
           cover: info.imageLinks?.thumbnail ?? null,
+          description: info.description ?? '',
         }),
       ];
     });
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Erro da Google Books API:", error.response?.data);
-      console.error("Status HTTP:", error.response?.status);
+      console.error('Google Books API error:', error.response?.data);
+      console.error('HTTP status:', error.response?.status);
     }
 
     throw error;
   }
 }
-
-
-
