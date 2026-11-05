@@ -16,7 +16,7 @@ function App() {
     loading: true
   })
 
-  const queryClient = new QueryClient()
+  const [queryClient] = useState(() => new QueryClient())
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(

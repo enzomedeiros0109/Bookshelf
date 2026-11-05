@@ -23,6 +23,12 @@ export type LibraryBookPatch = {
   totalPages?: number;
 };
 
+export type ReadingGoalSummary = {
+  booksRead: number;
+  goalBooks: number;
+  year: number;
+};
+
 type CatalogRow = {
   id: string;
   provider_book_id: string;
@@ -154,7 +160,7 @@ export async function saveBookToLibrary(
   const bookId = await getCatalogBookId(book);
   const { data: currentData, error: currentError } = await supabase
     .from("user_books")
-    .select("status,is_favorite,pages_read,total_pages")
+    .select("status,is_favorite,pages_read,total_pages,completed_at")
     .eq("user_id", userId)
     .eq("book_id", bookId)
     .maybeSingle();
@@ -166,6 +172,7 @@ export async function saveBookToLibrary(
     is_favorite: boolean;
     pages_read: number;
     total_pages: number | null;
+    completed_at: string | null;
   } | null;
   let status = current?.status ?? null;
   let pagesRead = current?.pages_read ?? 0;
@@ -225,6 +232,13 @@ export async function saveBookToLibrary(
     throw new Error("Pages read cannot exceed the total number of pages");
   }
 
+  const completedAt =
+    status === "read"
+      ? current?.status === "read"
+        ? current.completed_at
+        : new Date().toISOString()
+      : null;
+
   if (status === null && !isFavorite) {
     if (current) {
       const { error } = await supabase
@@ -249,6 +263,7 @@ export async function saveBookToLibrary(
         is_favorite: isFavorite,
         pages_read: pagesRead,
         total_pages: totalPages,
+        completed_at: completedAt,
       },
       { onConflict: "user_id,book_id" }
     );
@@ -264,4 +279,57 @@ export async function saveBookToLibrary(
     pagesRead,
     totalPages,
   } satisfies LibraryBook;
+}
+
+export async function getReadingGoalSummary(year: number): Promise<ReadingGoalSummary> {
+  if (!Number.isInteger(year)) throw new Error("Reading goal year must be an integer");
+
+  const userId = await getAuthenticatedUserId();
+  const startOfYear = new Date(year, 0, 1).toISOString();
+  const startOfNextYear = new Date(year + 1, 0, 1).toISOString();
+  const [goalResult, booksResult] = await Promise.all([
+    supabase
+      .from("user_reading_goals")
+      .select("goal_books")
+      .eq("user_id", userId)
+      .eq("goal_year", year)
+      .maybeSingle(),
+    supabase
+      .from("user_books")
+      .select("book_id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("status", "read")
+      .gte("completed_at", startOfYear)
+      .lt("completed_at", startOfNextYear),
+  ]);
+
+  if (goalResult.error) throw goalResult.error;
+  if (booksResult.error) throw booksResult.error;
+
+  return {
+    booksRead: booksResult.count ?? 0,
+    goalBooks: goalResult.data?.goal_books ?? 0,
+    year,
+  };
+}
+
+export async function saveReadingGoal(year: number, goalBooks: number) {
+  if (!Number.isInteger(year)) throw new Error("Reading goal year must be an integer");
+  if (!Number.isInteger(goalBooks) || goalBooks < 0) {
+    throw new Error("Reading goal must be a non-negative whole number");
+  }
+
+  const userId = await getAuthenticatedUserId();
+  const { data, error } = await supabase
+    .from("user_reading_goals")
+    .upsert(
+      { user_id: userId, goal_year: year, goal_books: goalBooks },
+      { onConflict: "user_id,goal_year" }
+    )
+    .select("goal_books")
+    .single();
+
+  if (error) throw error;
+
+  return data.goal_books as number;
 }

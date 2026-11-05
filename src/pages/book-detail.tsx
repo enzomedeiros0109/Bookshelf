@@ -77,9 +77,14 @@ const BookDetail = () => {
         savedBook
       );
       setPendingStatus(null);
-      await queryClient.invalidateQueries({
-        queryKey: ["user-library", user?.id],
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["user-library", user?.id],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["reading-goal", user?.id],
+        }),
+      ]);
       setValidationError(null);
     },
     onError: () => setPendingStatus(null),
