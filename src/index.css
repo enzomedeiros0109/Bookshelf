@@ -125,3 +125,12 @@
     @apply font-heading font-bold;
     }
 }
+
+.book-detail .book-detail-action {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.book-detail .book-detail-action:hover {
+  background-color: color-mix(in srgb, var(--accent) 88%, black);
+}

@@ -14,6 +14,32 @@ const api = rateLimit(apiBase, {
   perMilliseconds: 1000,
 });
 
+function parseVolume(item: any) {
+  const info = item.volumeInfo;
+
+  if (!info?.title) return null;
+
+  return bookSchema.parse({
+    externalId: item.id,
+    name: info.title,
+    authors: info.authors ?? [],
+    genres: info.categories ?? [],
+    cover: info.imageLinks?.thumbnail ?? null,
+    description: info.description ?? '',
+    pageCount:
+      Number.isInteger(info.pageCount) && info.pageCount > 0
+        ? info.pageCount
+        : null,
+  });
+}
+
+function logGoogleBooksError(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    console.error('Google Books API error:', error.response?.data);
+    console.error('HTTP status:', error.response?.status);
+  }
+}
+
 export async function getBooks(query: string) {
   try {
     const { data } = await api.get('/volumes', {
@@ -25,27 +51,25 @@ export async function getBooks(query: string) {
     });
 
     return (data.items ?? []).flatMap((item: any) => {
-      const info = item.volumeInfo;
-
-      if (!info?.title) return [];
-
-      return [
-        bookSchema.parse({
-          externalId: item.id,
-          name: info.title,
-          authors: info.authors ?? [],
-          genres: info.categories ?? [],
-          cover: info.imageLinks?.thumbnail ?? null,
-          description: info.description ?? '',
-        }),
-      ];
+      const book = parseVolume(item);
+      return book ? [book] : [];
     });
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error('Google Books API error:', error.response?.data);
-      console.error('HTTP status:', error.response?.status);
-    }
+    logGoogleBooksError(error);
+    throw error;
+  }
+}
 
+export async function getBookById(externalId: string) {
+  try {
+    const { data } = await api.get(`/volumes/${encodeURIComponent(externalId)}`);
+    const book = parseVolume(data);
+
+    if (!book) throw new Error("Book not found");
+
+    return book;
+  } catch (error) {
+    logGoogleBooksError(error);
     throw error;
   }
 }

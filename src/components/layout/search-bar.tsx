@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getBooks } from "@/api/api"
 import { useEffect, useState } from "react"
 import type { BookSchema } from "@/schemas/db/books-schema"
+import { Link } from "react-router"
 
 type Props = { className?: string }
 
@@ -68,8 +69,13 @@ const SearchBar = ({ className }: Props) => {
 
           {!isFetching &&
             data?.map((book: BookSchema) => (
-              <div
+              <Link
                 key={book.externalId}
+                to={`/books/${encodeURIComponent(book.externalId)}`}
+                onClick={() => {
+                  setQuery("");
+                  setDebouncedQuery("");
+                }}
                 className="flex gap-3 border-b p-3 last:border-b-0 hover:bg-muted"
               >
                 {book.cover ? (
@@ -95,7 +101,7 @@ const SearchBar = ({ className }: Props) => {
                     {book.genres.join(", ") || "No categories"}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
         </div>
       )}
