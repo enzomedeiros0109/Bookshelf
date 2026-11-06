@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Book, Bookmark, BookOpen, Check, Star } from "lucide-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { getReadingGoalSummary, saveReadingGoal, type ReadingGoalSummary } from "@/api/supabase"
 import { useAuthContext } from "@/context/auth-context"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu, SidebarMenuItem } from "../ui/sidebar"
@@ -19,6 +19,8 @@ const items = [
 
 
 const AppSideBar = () => {
+
+   const navigate = useNavigate()
    const { user } = useAuthContext()
    const queryClient = useQueryClient()
    const year = new Date().getFullYear()
@@ -97,8 +99,13 @@ const AppSideBar = () => {
       <Sidebar>
          <SidebarContent>
             <SidebarGroup className="gap-8 p-4">
-               <Logo />
-               {/* <SearchBar className="h-11" /> */}
+               <button className="cursor-pointer"
+                  onClick={() => {
+                     navigate('/')
+                  }}
+               >
+                  <Logo />
+               </button>
             </SidebarGroup>
 
             <nav
