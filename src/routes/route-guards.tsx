@@ -8,7 +8,7 @@ export function RequireAuth() {
    if (loading) return (
       <div className='flex flex-col justify-center items-center min-h-screen'>
          <LoaderCircle className='animate-spin size-10' />
-         Loading
+         Loading...
       </div>
    )
    if (!user) return <Navigate to="/login" replace />
@@ -24,7 +24,7 @@ export function GuestOnly() {
    (
       <div className='flex flex-col justify-center items-center min-h-screen'>
          <LoaderCircle className='animate-spin size-10' />
-         Loading
+         Loading...
       </div>
    )
 

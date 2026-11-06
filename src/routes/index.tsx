@@ -14,6 +14,7 @@ import AllBooks from '@/components/layout/home-outlets/all-books'
 import Read from '@/components/layout/home-outlets/read'
 import Landing from '@/pages/landing'
 import Home from '@/pages/home'
+import BookDetail from '@/pages/book-detail'
 
 type Props = {}
 
@@ -46,6 +47,7 @@ export const AppRoutes = ({ }: Props) => {
          <Route element={<RequireAuth />}>
             <Route element={<Home />}>
                <Route path="/all-books" element={<AllBooks />} />
+               <Route path="/books/:externalId" element={<BookDetail />} />
                <Route path="/currently-reading" element={<CurrentlyReading />} />
                <Route path="/want-to-read" element={<WantToRead />} />
                <Route path="/read" element={<Read />} />

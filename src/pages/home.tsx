@@ -7,15 +7,17 @@ type Props = {}
 
 const Home = ({}: Props) => {
   return (
-    <div >
-      <SidebarProvider>
-        <AppSideBar />
-        <main className='min-w-0 flex-1'>
-            <Header />
+    <SidebarProvider className="h-svh overflow-hidden">
+      <AppSideBar />
+      <main className="flex h-svh min-w-0 flex-1 flex-col">
+        <div className="shrink-0">
+          <Header />
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <Outlet />
-        </main>
-      </SidebarProvider>
-    </div>
+        </div>
+      </main>
+    </SidebarProvider>
   )
 }
 
