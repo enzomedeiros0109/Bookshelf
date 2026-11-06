@@ -11,9 +11,9 @@ const OutletHeader = ({ title, count, isLoading = false }: Props) => {
 
   return (
     <div className="flex items-end justify-between">
-      <div className="flex items-end gap-4">
-        <h1 className="text-start text-4xl font-bold">{title}</h1>
-        <p className="text-base text-muted-foreground">
+      <div className="flex gap-4">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <p className="text-lg self-end text-muted-foreground">
           {isLoading ? "Loading" : bookCount}
         </p>
       </div>

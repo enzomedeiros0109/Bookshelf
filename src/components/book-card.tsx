@@ -32,10 +32,10 @@ const BookCard = ({ book }: Props) => {
               <img
                 src={book.cover}
                 alt={`Cover of ${book.name}`}
-                className="aspect-[2/3] w-full rounded-md bg-muted object-cover"
+                className="aspect-2/3 w-full rounded-md bg-muted object-cover shrink-0"
               />
             ) : (
-              <div className="flex aspect-[2/3] w-full items-center justify-center rounded-md bg-muted px-2 text-center text-sm text-muted-foreground">
+              <div className="flex aspect-2/3 w-full items-center justify-center rounded-md bg-muted px-2 text-center text-sm text-muted-foreground">
                 No cover
               </div>
             )}

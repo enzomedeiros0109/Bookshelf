@@ -1,4 +1,4 @@
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { cn } from "cn"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { useQuery } from "@tanstack/react-query"
@@ -34,7 +34,7 @@ const SearchBar = ({ className }: Props) => {
   });
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-100">
       <InputGroup className={cn("rounded-md", className)}>
         <InputGroupInput
           placeholder="Search books..."
@@ -44,7 +44,16 @@ const SearchBar = ({ className }: Props) => {
 
         <InputGroupAddon>
           <Search />
+
         </InputGroupAddon>
+        {query.length > 0 && (
+          <button
+            onClick={() => setQuery("")}
+            className="bg-white p-1 cursor-pointer hover:brightness-90 hover:rounded-full mr-2"
+          >
+            <X className="size-4" />
+          </button>
+        )}
       </InputGroup>
 
       {query.trim().length >= 3 && (

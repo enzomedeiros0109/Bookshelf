@@ -46,6 +46,8 @@ export async function getBooks(query: string) {
       params: {
         q: `intitle:${query}`,
         langRestrict: 'en',
+        printType: 'books',
+        orderBy: 'relevance',
         maxResults: 20,
       },
     });
