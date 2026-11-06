@@ -5,6 +5,7 @@ import type { User } from '@supabase/supabase-js'
 import { AppRoutes } from './routes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LoaderCircle } from 'lucide-react'
+import Landing from './pages/landing'
 
 function App() {
 
@@ -34,10 +35,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthContext.Provider value={authState}>
           {authState.loading ? (
-            <div className='flex flex-col justify-center items-center min-h-screen'>
-              <LoaderCircle className='animate-spin size-10' />
-              Loading
-            </div>
+            <Landing />
           ) : <AppRoutes />}
         </AuthContext.Provider>
       </QueryClientProvider>
