@@ -232,6 +232,9 @@ const BookDetail = () => {
             <p className="text-muted-foreground">
               {book.authors.join(", ") || "Unknown author"}
             </p>
+            <p className="text-sm text-muted-foreground">
+              Language: {book.language ?? "Unknown"}
+            </p>
             {book.genres.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {book.genres.map((genre) => (

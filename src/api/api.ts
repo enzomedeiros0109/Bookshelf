@@ -23,6 +23,7 @@ function parseVolume(item: any) {
     externalId: item.id,
     name: info.title,
     authors: info.authors ?? [],
+    language: info.language ?? null,
     genres: info.categories ?? [],
     cover: info.imageLinks?.thumbnail ?? null,
     description: info.description ?? '',
@@ -54,7 +55,10 @@ export async function getBooks(query: string) {
 
     return (data.items ?? []).flatMap((item: any) => {
       const book = parseVolume(item);
-      return book ? [book] : [];
+      if (!book) return [];
+
+      const language = book.language?.toLowerCase().split(/[-_]/)[0];
+      return language === 'en' ? [book] : [];
     });
   } catch (error) {
     logGoogleBooksError(error);

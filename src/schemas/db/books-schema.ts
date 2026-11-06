@@ -4,6 +4,7 @@ export const bookSchema = z.object({
   externalId: z.string(),
   name: z.string(),
   authors: z.array(z.string()),
+  language: z.string().nullable(),
   genres: z.array(z.string()),
   cover: z.string().nullable(),
   description: z.string(),
