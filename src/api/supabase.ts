@@ -68,6 +68,7 @@ function toLibraryBook(row: UserBookRow): LibraryBook | null {
     externalId: row.books.provider_book_id,
     name: row.books.title,
     authors: row.books.authors ?? [],
+    language: null,
     genres: row.books.genres ?? [],
     cover: row.books.cover_url,
     description: row.books.description ?? "",

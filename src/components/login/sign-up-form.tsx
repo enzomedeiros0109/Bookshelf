@@ -31,7 +31,9 @@ const SignUpForm = ({ }: Props) => {
          options: {
             emailRedirectTo: `${window.location.origin}/login?confirmed=1`,
             data: {
-               full_name: formData.fullName.trim()
+               display_name: formData.fullName.trim(),
+               full_name: formData.fullName.trim(),
+               preferred_language: 'en',
             }
          }
       })

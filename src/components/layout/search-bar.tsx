@@ -6,6 +6,8 @@ import { getBooks } from "@/api/api"
 import { useEffect, useState } from "react"
 import type { BookSchema } from "@/schemas/db/books-schema"
 import { Link } from "react-router"
+import { getBookLanguage } from "@/constants/book-languages"
+import { useAuthContext } from "@/context/auth-context"
 
 type Props = { className?: string }
 
@@ -13,6 +15,8 @@ const SearchBar = ({ className }: Props) => {
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const { user } = useAuthContext();
+  const language = getBookLanguage(user?.user_metadata?.preferred_language);
 
   // Aguarda o usuário parar de digitar por 300 ms
   useEffect(() => {
@@ -24,8 +28,8 @@ const SearchBar = ({ className }: Props) => {
   }, [query]);
 
   const { data, isFetching, error } = useQuery({
-    queryKey: ["getBooks", debouncedQuery],
-    queryFn: () => getBooks(debouncedQuery),
+    queryKey: ["getBooks", debouncedQuery, language],
+    queryFn: () => getBooks(debouncedQuery, language),
     enabled: debouncedQuery.length >= 3,
     retry: false,
     staleTime: 1000 * 60 * 10,
