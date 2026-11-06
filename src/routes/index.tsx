@@ -15,6 +15,7 @@ import Read from '@/components/layout/home-outlets/read'
 import Landing from '@/pages/landing'
 import Home from '@/pages/home'
 import BookDetail from '@/pages/book-detail'
+import Settings from '@/components/layout/home-outlets/settings'
 
 type Props = {}
 
@@ -52,6 +53,7 @@ export const AppRoutes = ({ }: Props) => {
                <Route path="/want-to-read" element={<WantToRead />} />
                <Route path="/read" element={<Read />} />
                <Route path="/favorites" element={<Favorites />} />
+               <Route path='/settings' element={<Settings />} />
             </Route>
          </Route>
 

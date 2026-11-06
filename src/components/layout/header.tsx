@@ -3,6 +3,8 @@ import SearchBar from "./search-bar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router"
+import { useContext } from "react"
+import { useAuthContext } from "@/context/auth-context"
 
 const Header = () => {
 
@@ -17,6 +19,8 @@ const Header = () => {
     navigate('/login')
   }
 
+  const user = useAuthContext()
+
   return (
     <div className="flex gap-8 justify-end items-center min-w-auto h-20 bg-card px-8 border-b">
 
@@ -25,6 +29,8 @@ const Header = () => {
         <DropdownMenuTrigger render={
           <div className="order-2 bg-accent p-2 rounded-full cursor-pointer">
             <User className="size-6" />
+            {user.user?.user_metadata.display_name}
+
           </div>
         } />
         <DropdownMenuContent>
@@ -32,7 +38,9 @@ const Header = () => {
             <UserIcon />
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => navigate('/settings')}
+            className="cursor-pointer">
             <SettingsIcon />
             Settings
           </DropdownMenuItem>
