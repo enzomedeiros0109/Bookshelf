@@ -3,7 +3,6 @@ import SearchBar from "./search-bar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router"
-import { useContext } from "react"
 import { useAuthContext } from "@/context/auth-context"
 
 const Header = () => {
@@ -19,7 +18,19 @@ const Header = () => {
     navigate('/login')
   }
 
-  const user = useAuthContext()
+  const { user } = useAuthContext()
+  const displayName =
+    user?.user_metadata?.display_name || user?.user_metadata?.full_name
+
+  function getInitials(name?: string | null): string {
+    if (!name?.trim()) return '?';
+
+    return name
+      .trim()
+      .split(/\s+/)
+      .map(word => word[0].toUpperCase())
+      .join('');
+  }
 
   return (
     <div className="flex gap-8 justify-end items-center min-w-auto h-20 bg-card px-8 border-b">
@@ -27,9 +38,14 @@ const Header = () => {
 
       <DropdownMenu>
         <DropdownMenuTrigger render={
-          <div className="order-2 bg-accent p-2 rounded-full cursor-pointer">
-            <User className="size-6" />
-            {user.user?.user_metadata.display_name}
+          <div className="flex order-2 bg-accent p-2 w-10 rounded-full cursor-pointer justify-center">
+            {getInitials(displayName) === '?' ? (
+              <User className="size-6" />
+            )
+              :
+              <p>{getInitials(displayName)}</p>
+            }
+
 
           </div>
         } />

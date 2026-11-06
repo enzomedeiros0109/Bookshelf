@@ -1,4 +1,5 @@
 import { bookSchema } from '@/schemas/db/books-schema';
+import type { BookLanguage } from '@/constants/book-languages';
 import axios from 'axios';
 import rateLimit from 'axios-rate-limit';
 
@@ -41,12 +42,12 @@ function logGoogleBooksError(error: unknown) {
   }
 }
 
-export async function getBooks(query: string) {
+export async function getBooks(query: string, language: BookLanguage = 'en') {
   try {
     const { data } = await api.get('/volumes', {
       params: {
         q: `intitle:${query}`,
-        langRestrict: 'en',
+        langRestrict: language,
         printType: 'books',
         orderBy: 'relevance',
         maxResults: 20,
@@ -57,8 +58,8 @@ export async function getBooks(query: string) {
       const book = parseVolume(item);
       if (!book) return [];
 
-      const language = book.language?.toLowerCase().split(/[-_]/)[0];
-      return language === 'en' ? [book] : [];
+      const bookLanguage = book.language?.toLowerCase().split(/[-_]/)[0];
+      return bookLanguage === language ? [book] : [];
     });
   } catch (error) {
     logGoogleBooksError(error);
