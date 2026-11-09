@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { AppRoutes } from './routes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { LoaderCircle } from 'lucide-react'
 import Landing from './pages/landing'
 
 function App() {

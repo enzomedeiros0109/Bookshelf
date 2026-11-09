@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router"
 import { useAuthContext } from "@/context/auth-context"
+import { getInitials } from "@/hooks/use-get-initials"
 
 const Header = () => {
 
@@ -22,19 +23,8 @@ const Header = () => {
   const displayName =
     user?.user_metadata?.display_name || user?.user_metadata?.full_name
 
-  function getInitials(name?: string | null): string {
-    if (!name?.trim()) return '?';
-
-    return name
-      .trim()
-      .split(/\s+/)
-      .map(word => word[0].toUpperCase())
-      .join('');
-  }
-
   return (
     <div className="flex gap-8 justify-end items-center min-w-auto h-20 bg-card px-8 border-b">
-
 
       <DropdownMenu>
         <DropdownMenuTrigger render={
@@ -43,14 +33,18 @@ const Header = () => {
               <User className="size-6" />
             )
               :
-              <p>{getInitials(displayName)}</p>
+              <p className="text-white">{getInitials(displayName)}</p>
             }
 
 
           </div>
         } />
         <DropdownMenuContent>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => {
+              navigate('/profile')
+            }}
+            className="cursor-pointer">
             <UserIcon />
             Profile
           </DropdownMenuItem>
