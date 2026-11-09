@@ -235,6 +235,9 @@ const BookDetail = () => {
             <p className="text-sm text-muted-foreground">
               Language: {book.language ?? "Unknown"}
             </p>
+            <p className="text-sm text-muted-foreground">
+              Main category: {book.mainCategory ?? "Not provided by Google Books"}
+            </p>
             {book.genres.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {book.genres.map((genre) => (

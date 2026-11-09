@@ -29,12 +29,18 @@ export type ReadingGoalSummary = {
   year: number;
 };
 
+export type ReadingStatsBook = {
+  completedAt: string | null;
+  mainCategory: string | null;
+};
+
 type CatalogRow = {
   id: string;
   provider_book_id: string;
   title: string;
   authors: string[] | null;
   genres: string[] | null;
+  main_category: string | null;
   cover_url: string | null;
   description: string | null;
 };
@@ -70,6 +76,7 @@ function toLibraryBook(row: UserBookRow): LibraryBook | null {
     authors: row.books.authors ?? [],
     language: null,
     genres: row.books.genres ?? [],
+    mainCategory: row.books.main_category,
     cover: row.books.cover_url,
     description: row.books.description ?? "",
     pageCount: row.total_pages,
@@ -90,6 +97,7 @@ async function getCatalogBookId(book: BookSchema) {
         title: book.name,
         authors: book.authors,
         genres: book.genres,
+        main_category: book.mainCategory,
         cover_url: book.cover,
         description: book.description,
       },
@@ -118,7 +126,7 @@ export async function getUserLibrary(filter: LibraryFilter = {}) {
   let query = supabase
     .from("user_books")
     .select(
-      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,cover_url,description)"
+      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,main_category,cover_url,description)"
     )
     .eq("user_id", userId)
     .eq("books.provider", "google_books");
@@ -140,7 +148,7 @@ export async function getUserBookByExternalId(externalId: string) {
   const { data, error } = await supabase
     .from("user_books")
     .select(
-      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,cover_url,description)"
+      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,main_category,cover_url,description)"
     )
     .eq("user_id", userId)
     .eq("books.provider", "google_books")
@@ -312,6 +320,25 @@ export async function getReadingGoalSummary(year: number): Promise<ReadingGoalSu
     goalBooks: goalResult.data?.goal_books ?? 0,
     year,
   };
+}
+
+export async function getReadingStatsBooks(): Promise<ReadingStatsBook[]> {
+  const userId = await getAuthenticatedUserId();
+  const { data, error } = await supabase
+    .from("user_books")
+    .select("completed_at,books!inner(main_category,genres)")
+    .eq("user_id", userId)
+    .eq("status", "read");
+
+  if (error) throw error;
+
+  return ((data ?? []) as unknown as {
+    completed_at: string | null;
+    books: { main_category: string | null; genres: string[] | null };
+  }[]).map((row) => ({
+    completedAt: row.completed_at,
+    mainCategory: row.books.main_category ?? row.books.genres?.[0] ?? null,
+  }));
 }
 
 export async function saveReadingGoal(year: number, goalBooks: number) {
