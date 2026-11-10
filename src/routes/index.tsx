@@ -16,6 +16,7 @@ import Landing from '@/pages/landing'
 import Home from '@/pages/home'
 import BookDetail from '@/pages/book-detail'
 import Settings from '@/components/layout/home-outlets/settings'
+import Profile from '@/components/layout/home-outlets/profile'
 
 type Props = {}
 
@@ -54,6 +55,7 @@ export const AppRoutes = ({ }: Props) => {
                <Route path="/read" element={<Read />} />
                <Route path="/favorites" element={<Favorites />} />
                <Route path='/settings' element={<Settings />} />
+               <Route path='profile' element={<Profile />}/>
             </Route>
          </Route>
 
