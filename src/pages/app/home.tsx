@@ -1,5 +1,5 @@
 import { SidebarProvider } from '@/components/ui/sidebar'
-import Header from '../components/layout/header'
+import Header from '@/components/layout/header'
 import AppSideBar from '@/components/layout/app-sidebar'
 import { Outlet } from 'react-router'
 

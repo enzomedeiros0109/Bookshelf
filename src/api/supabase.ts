@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase-client";
 import { getMostFrequentGenre } from "@/lib/book-genres";
-import type { BookSchema } from "@/schemas/db/books-schema";
+import type { BookSchema } from "@/schemas/book";
 
 export type ReadingStatus = "want_to_read" | "reading" | "read" | null;
 

@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Star } from "lucide-react";
 import { Link, useParams } from "react-router";
-import { getBookById } from "@/api/api";
+import { getBookById } from "@/api/google-books";
 import { getIndividualGenres } from "@/lib/book-genres";
 import {
   getUserBookByExternalId,
@@ -14,7 +14,7 @@ import {
 import { useAuthContext } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getLanguage } from "@/hooks/use-get-language";
+import { getLanguage } from "@/lib/formatters";
 
 const statuses: { value: Exclude<ReadingStatus, null>; label: string }[] = [
   { value: "reading", label: "Currently Reading" },

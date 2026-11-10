@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import type { LibraryBook } from "@/api/supabase";
-import { Card } from "./ui/card";
+import { Card } from "@/components/ui/card";
 import { getIndividualGenres } from "@/lib/book-genres";
 
 type Props = {

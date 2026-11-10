@@ -1,4 +1,4 @@
-import { bookSchema } from '@/schemas/db/books-schema';
+import { bookSchema } from '@/schemas/book';
 import type { BookLanguage } from '@/constants/book-languages';
 import axios from 'axios';
 import rateLimit from 'axios-rate-limit';
