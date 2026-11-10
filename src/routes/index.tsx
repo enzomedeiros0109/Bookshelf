@@ -14,6 +14,10 @@ import AllBooks from '@/components/layout/home-outlets/all-books'
 import Read from '@/components/layout/home-outlets/read'
 import Landing from '@/pages/landing'
 import Home from '@/pages/home'
+import BookDetail from '@/pages/book-detail'
+import Settings from '@/components/layout/home-outlets/settings'
+import Profile from '@/components/layout/home-outlets/profile'
+import Charts from '@/components/layout/home-outlets/charts'
 
 type Props = {}
 
@@ -29,14 +33,14 @@ export const AppRoutes = ({ }: Props) => {
                <Route path="/sign-up" element={<SignUpForm />} />
                <Route path="/check-email" element={<CheckEmail isPasswordReset={false} />} />
                <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-               <Route
-                  path="/forgot-password/check-email"
-                  element={<CheckEmail isPasswordReset={true} />}
-               />
             </Route>
          </Route>
 
          <Route element={<Login />}>
+            <Route
+               path="/forgot-password/check-email"
+               element={<CheckEmail isPasswordReset={true} />}
+            />
             <Route
                path="/forgot-password/new-password"
                element={<NewPasswordForm />}
@@ -46,10 +50,14 @@ export const AppRoutes = ({ }: Props) => {
          <Route element={<RequireAuth />}>
             <Route element={<Home />}>
                <Route path="/all-books" element={<AllBooks />} />
+               <Route path="/books/:externalId" element={<BookDetail />} />
                <Route path="/currently-reading" element={<CurrentlyReading />} />
                <Route path="/want-to-read" element={<WantToRead />} />
                <Route path="/read" element={<Read />} />
                <Route path="/favorites" element={<Favorites />} />
+               <Route path="/charts" element={<Charts />} />
+               <Route path='/settings' element={<Settings />} />
+               <Route path='profile' element={<Profile />}/>
             </Route>
          </Route>
 

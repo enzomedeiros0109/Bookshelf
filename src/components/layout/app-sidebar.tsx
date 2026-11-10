@@ -1,10 +1,13 @@
-import { Book, Bookmark, BookOpen, Check, Star } from "lucide-react"
-import { Link } from "react-router"
+import { useState } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { Book, Bookmark, BookOpen, ChartColumn, Check, Star } from "lucide-react"
+import { Link, useNavigate } from "react-router"
+import { getReadingGoalSummary, saveReadingGoal, type ReadingGoalSummary } from "@/api/supabase"
+import { useAuthContext } from "@/context/auth-context"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu, SidebarMenuItem } from "../ui/sidebar"
 import Logo from "./logo"
 import AppSideBarFooter from "./app-sidebar-footer"
-
-type Props = {}
+import ReadingGoalDialog from "./reading-goal-dialog"
 
 const items = [
    { title: "All Books", icon: Book, path: "/all-books" },
@@ -12,16 +15,98 @@ const items = [
    { title: "Want to Read", icon: Bookmark, path: "/want-to-read" },
    { title: "Read", icon: Check, path: "/read" },
    { title: "Favorites", icon: Star, path: "/favorites" },
+   { title: "Charts", icon: ChartColumn, path: "/charts" },
 ]
 
 
-const AppSideBar = ({}: Props) => {
+const AppSideBar = () => {
+
+   const navigate = useNavigate()
+   const { user } = useAuthContext()
+   const queryClient = useQueryClient()
+   const year = new Date().getFullYear()
+   const [goalDialogOpen, setGoalDialogOpen] = useState(false)
+   const [goalSaveError, setGoalSaveError] = useState<string | null>(null)
+   const goalQuery = useQuery({
+      queryKey: ["reading-goal", user?.id, year],
+      queryFn: () => getReadingGoalSummary(year),
+      enabled: Boolean(user?.id),
+   })
+   const goalMutation = useMutation({
+      mutationFn: (goalBooks: number) => saveReadingGoal(year, goalBooks),
+      onSuccess: async (savedGoalBooks) => {
+         setGoalSaveError(null)
+         queryClient.setQueryData<ReadingGoalSummary>(
+            ["reading-goal", user?.id, year],
+            (current) => ({
+               booksRead: current?.booksRead ?? 0,
+               goalBooks: savedGoalBooks,
+               year,
+            }),
+         )
+         await queryClient.invalidateQueries({
+            queryKey: ["reading-goal", user?.id, year],
+         })
+         setGoalDialogOpen(false)
+      },
+      onError: (error) => {
+         setGoalSaveError(
+            error instanceof Error ? error.message : "Could not save your reading goal.",
+         )
+      },
+   })
+
+   const handleOpenGoalDialog = () => {
+      setGoalSaveError(null)
+      goalMutation.reset()
+      setGoalDialogOpen(true)
+   }
+
+   const handleSaveGoal = (goalBooks: number) => {
+      setGoalSaveError(null)
+      goalMutation.mutate(goalBooks)
+   }
+
+   const booksRead = goalQuery.data?.booksRead ?? 0
+   const goalBooks = goalQuery.data?.goalBooks ?? 0
+   const displayedBooksRead =
+      goalQuery.isLoading && !goalQuery.data
+         ? "…"
+         : goalQuery.isError && !goalQuery.data
+            ? "—"
+            : booksRead
+   const displayedGoalBooks =
+      goalQuery.isLoading && !goalQuery.data
+         ? "…"
+         : goalQuery.isError && !goalQuery.data
+            ? "—"
+            : goalBooks
+   const progressPercent =
+      goalBooks > 0 ? Math.min(100, Math.round((booksRead / goalBooks) * 100)) : 0
+   const booksToGo = Math.max(0, goalBooks - booksRead)
+
+   const progressMessage = goalQuery.isLoading
+      ? "Loading reading goal..."
+      : goalQuery.isError
+         ? goalQuery.data
+            ? "Could not refresh reading goal."
+            : "Could not load reading goal."
+         : goalBooks === 0
+            ? "Set a goal to track progress"
+            : `${progressPercent}% complete - ${booksToGo} books to go`
+   const footerMessage = goalSaveError ?? progressMessage
+
    return (
       <Sidebar>
          <SidebarContent>
             <SidebarGroup className="gap-8 p-4">
-               <Logo />
-               {/* <SearchBar className="h-11" /> */}
+               <button className="cursor-pointer"
+                  onClick={() => {
+                     navigate('/')
+                  }}
+               >
+                  <Logo />
+               </button>
             </SidebarGroup>
 
             <nav
@@ -45,10 +130,29 @@ const AppSideBar = ({}: Props) => {
             </nav>
          </SidebarContent>
 
-         <SidebarFooter className="pb-8">
+         <SidebarFooter className="relative pb-8">
+            {goalDialogOpen && (
+               <ReadingGoalDialog
+                  year={year}
+                  goalBooks={goalBooks}
+                  isSaving={goalMutation.isPending}
+                  saveError={goalSaveError}
+                  onClose={() => setGoalDialogOpen(false)}
+                  onSave={handleSaveGoal}
+               />
+            )}
             <SidebarMenu>
                <SidebarMenuItem>
-                  <AppSideBarFooter />
+                  <AppSideBarFooter
+                     year={year}
+                     displayedBooksRead={displayedBooksRead}
+                     displayedGoalBooks={displayedGoalBooks}
+                     progressPercent={progressPercent}
+                     progressMessage={footerMessage}
+                     hasError={Boolean(goalQuery.isError || goalSaveError)}
+                     isLoading={goalQuery.isLoading}
+                     onEditGoal={handleOpenGoalDialog}
+                  />
                </SidebarMenuItem>
             </SidebarMenu>
          </SidebarFooter>

@@ -1,17 +1,25 @@
-import SortBy from "../sort-by"
+import SortBy from "../sort-by";
 
-type Props = {}
+type Props = {
+  title: string;
+  count: number;
+  isLoading?: boolean;
+};
 
-const OutletHeader = ({}: Props) => {
-   return (
-      <div className="flex items-end justify-between">
-         <div className="flex gap-4 items-end">
-            <h1 className="font-bold text-4xl text-start">All Books</h1>
-            <p className="text-base text-white brightness-50">9 Books</p>
-         </div>
-         <SortBy />
+const OutletHeader = ({ title, count, isLoading = false }: Props) => {
+  const bookCount = `${count} ${count === 1 ? "Book" : "Books"}`;
+
+  return (
+    <div className="flex items-end justify-between">
+      <div className="flex gap-4">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <p className="text-lg self-end text-muted-foreground">
+          {isLoading ? "Loading" : bookCount}
+        </p>
       </div>
-   )
-}
+      <SortBy />
+    </div>
+  );
+};
 
-export default OutletHeader
+export default OutletHeader;
