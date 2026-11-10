@@ -86,6 +86,12 @@ const BookDetail = () => {
         queryClient.invalidateQueries({
           queryKey: ["reading-goal", user?.id],
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["reading-stats-years", user?.id],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["reading-stats-books", user?.id],
+        }),
       ]);
       setValidationError(null);
     },

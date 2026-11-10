@@ -2,9 +2,7 @@ import Logo from "@/components/layout/logo"
 import { useNavigate } from "react-router"
 import BackgroundImage from '../assets/landing.png'
 
-type Props = {}
-
-const Landing = ({ }: Props) => {
+const Landing = () => {
 
    const navigate = useNavigate()
 

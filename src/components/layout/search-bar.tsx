@@ -1,5 +1,5 @@
 import { Search, X } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/utils"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { useQuery } from "@tanstack/react-query"
 import { getBooks } from "@/api/google-books"
@@ -96,6 +96,7 @@ const SearchBar = ({ className }: Props) => {
                     src={book.cover}
                     alt={`Cover of ${book.name}`}
                     className="h-30 w-20 shrink-0 rounded object-fill self-center"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="flex h-30 w-20 shrink-0 items-center justify-center rounded bg-muted text-xs">

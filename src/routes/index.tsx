@@ -19,9 +19,7 @@ import Settings from '@/pages/app/settings'
 import Profile from '@/pages/app/profile'
 import Charts from '@/pages/app/charts'
 
-type Props = {}
-
-export const AppRoutes = ({ }: Props) => {
+export const AppRoutes = () => {
 
    return (
       <Routes>

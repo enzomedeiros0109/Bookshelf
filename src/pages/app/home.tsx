@@ -3,9 +3,7 @@ import Header from '@/components/layout/header'
 import AppSideBar from '@/components/layout/app-sidebar'
 import { Outlet } from 'react-router'
 
-type Props = {}
-
-const Home = ({}: Props) => {
+const Home = () => {
   return (
     <SidebarProvider className="h-svh overflow-hidden">
       <AppSideBar />

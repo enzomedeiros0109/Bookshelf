@@ -36,6 +36,7 @@ const BookCard = ({ book }: Props) => {
                 src={book.cover}
                 alt={`Cover of ${book.name}`}
                 className="aspect-2/3 w-full rounded-md bg-muted object-cover shrink-0"
+                loading="lazy"
               />
             ) : (
               <div className="flex aspect-2/3 w-full items-center justify-center rounded-md bg-muted px-2 text-center text-sm text-muted-foreground">
@@ -61,14 +62,11 @@ const BookCard = ({ book }: Props) => {
               ))}
             </div>
             <div className="mt-auto space-y-2">
-              {pathname === '/all-books' ? (
+              {pathname === "/all-books" && (
                 <p className="rounded-lg bg-accent/20 px-2 py-1 text-center text-sm font-medium">
                   {statusLabel}
                 </p>
-              ) :
-                <>
-                </>
-              }
+              )}
               {book.status === "reading" && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">

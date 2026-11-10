@@ -7,11 +7,9 @@ import { useEffect, useState } from 'react'
 import PasswordUpdated from './password-updated'
 import { supabase } from '@/lib/supabase-client'
 
-type Props = {}
-
 type PasswordFields = z.infer<typeof passwordSchema>
 
-const NewPasswordForm = ({ }: Props) => {
+const NewPasswordForm = () => {
 
   const [isPasswordCreated, setIsPasswordCreated] = useState(false)
   const [isRecoverySession, setIsRecoverySession] = useState(false);
