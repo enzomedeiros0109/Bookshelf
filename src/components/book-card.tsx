@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import type { LibraryBook } from "@/api/supabase";
 import { Card } from "./ui/card";
+import { getIndividualGenres } from "@/lib/book-genres";
 
 type Props = {
   book: LibraryBook;
@@ -52,9 +53,9 @@ const BookCard = ({ book }: Props) => {
             <p className="text-sm text-muted-foreground">
               {book.authors.join(", ") || "Unknown author"}
             </p>
-            <div className="flex flex-wrap gap-1.5">
-              {book.genres.slice(0, 3).map((genre) => (
-                <span key={genre} className="rounded-xl bg-accent/20 px-2 py-0.5 text-xs">
+            <div className="flex flex-col gap-2">
+              {getIndividualGenres(book.genres).slice(0, 3).map((genre) => (
+                <span key={genre} className="w-fit rounded-xl bg-accent/20 px-2 py-0.5 text-sm">
                   {genre}
                 </span>
               ))}
