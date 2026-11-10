@@ -26,6 +26,7 @@ function parseVolume(item: any) {
     authors: info.authors ?? [],
     language: info.language ?? null,
     genres: info.categories ?? [],
+    mainCategory: info.mainCategory ?? null,
     cover: info.imageLinks?.thumbnail ?? null,
     description: info.description ?? '',
     pageCount:

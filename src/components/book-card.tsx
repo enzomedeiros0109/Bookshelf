@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import type { LibraryBook } from "@/api/supabase";
 import { Card } from "./ui/card";
 
@@ -22,6 +22,8 @@ const BookCard = ({ book }: Props) => {
     : book.isFavorite
       ? "Favorite"
       : "In Library";
+
+  const { pathname } = useLocation()
 
   return (
     <Link to={`/books/${encodeURIComponent(book.externalId)}`} className="block h-full">
@@ -58,9 +60,14 @@ const BookCard = ({ book }: Props) => {
               ))}
             </div>
             <div className="mt-auto space-y-2">
-              <p className="rounded-lg bg-accent/20 px-2 py-1 text-center text-sm font-medium">
-                {statusLabel}
-              </p>
+              {pathname === '/all-books' ? (
+                <p className="rounded-lg bg-accent/20 px-2 py-1 text-center text-sm font-medium">
+                  {statusLabel}
+                </p>
+              ) :
+                <>
+                </>
+              }
               {book.status === "reading" && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">

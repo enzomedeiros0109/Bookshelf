@@ -6,6 +6,7 @@ export const bookSchema = z.object({
   authors: z.array(z.string()),
   language: z.string().nullable(),
   genres: z.array(z.string()),
+  mainCategory: z.string().nullable(),
   cover: z.string().nullable(),
   description: z.string(),
   pageCount: z.number().int().positive().nullable(),

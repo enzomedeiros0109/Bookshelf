@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Book, Bookmark, BookOpen, Check, Star } from "lucide-react"
+import { Book, Bookmark, BookOpen, ChartColumn, Check, Star } from "lucide-react"
 import { Link, useNavigate } from "react-router"
 import { getReadingGoalSummary, saveReadingGoal, type ReadingGoalSummary } from "@/api/supabase"
 import { useAuthContext } from "@/context/auth-context"
@@ -15,6 +15,7 @@ const items = [
    { title: "Want to Read", icon: Bookmark, path: "/want-to-read" },
    { title: "Read", icon: Check, path: "/read" },
    { title: "Favorites", icon: Star, path: "/favorites" },
+   { title: "Charts", icon: ChartColumn, path: "/charts" },
 ]
 
 
