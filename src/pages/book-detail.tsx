@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Star } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { getBookById } from "@/api/api";
+import { getIndividualGenres } from "@/lib/book-genres";
 import {
   getUserBookByExternalId,
   saveBookToLibrary,
@@ -13,6 +14,7 @@ import {
 import { useAuthContext } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getLanguage } from "@/hooks/use-get-language";
 
 const statuses: { value: Exclude<ReadingStatus, null>; label: string }[] = [
   { value: "reading", label: "Currently Reading" },
@@ -128,6 +130,7 @@ const BookDetail = () => {
   }
 
   const book = bookQuery.data;
+  const individualGenres = getIndividualGenres(book.genres);
   const savedBook = libraryBookQuery.data;
   const displayedStatus = pendingStatus ? pendingStatus.value : savedBook?.status;
   const displayedPagesRead =
@@ -142,8 +145,8 @@ const BookDetail = () => {
     totalPagesValue.trim() === "" ? null : Number(totalPagesValue);
   const totalPages =
     parsedTotalPages !== null &&
-    Number.isInteger(parsedTotalPages) &&
-    parsedTotalPages > 0
+      Number.isInteger(parsedTotalPages) &&
+      parsedTotalPages > 0
       ? parsedTotalPages
       : null;
   const pagesReadNumber = Number(displayedPagesRead);
@@ -233,22 +236,23 @@ const BookDetail = () => {
               {book.authors.join(", ") || "Unknown author"}
             </p>
             <p className="text-sm text-muted-foreground">
-              Language: {book.language ?? "Unknown"}
+              Language: {getLanguage(book.language)}
             </p>
-            <p className="text-sm text-muted-foreground">
-              Main category: {book.mainCategory ?? "Not provided by Google Books"}
-            </p>
-            {book.genres.length > 0 && (
+
+            {individualGenres.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {book.genres.map((genre) => (
-                  <span key={genre} className="rounded-xl bg-accent/20 px-3 py-1 text-sm">
+                {individualGenres.map((genre) => (
+                  <span
+                    key={genre}
+                    className="max-w-50 wrap-break-word rounded-xl bg-accent/20 px-3 py-1 text-sm"
+                  >
                     {genre}
                   </span>
                 ))}
               </div>
             )}
-          </div>
 
+          </div>
           <div className="space-y-3">
             <h2 className="text-xl">Reading status</h2>
             <div className="flex flex-wrap gap-2">
@@ -271,7 +275,7 @@ const BookDetail = () => {
                 aria-pressed={savedBook?.isFavorite ?? false}
                 disabled={isPending}
                 onClick={toggleFavorite}
-                className="cursor-pointer"
+                className={`cursor-pointer ${savedBook?.isFavorite ? "book-detail-action" : ""}`}
               >
                 <Star
                   fill={savedBook?.isFavorite ? "currentColor" : "none"}
@@ -291,9 +295,11 @@ const BookDetail = () => {
 
           <div className="space-y-3">
             {book.pageCount ? (
-              <p className="text-sm text-muted-foreground">
-                Total pages: {totalPages ?? book.pageCount}
-              </p>
+              displayedStatus === 'reading' && (
+                <p className="text-sm text-muted-foreground">
+                  Total pages: {totalPages ?? book.pageCount}
+                </p>
+              )
             ) : (
               <div className="flex max-w-sm items-end gap-2">
                 <div className="flex-1 space-y-2">

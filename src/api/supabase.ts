@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase-client";
+import { getMostFrequentGenre } from "@/lib/book-genres";
 import type { BookSchema } from "@/schemas/db/books-schema";
 
 export type ReadingStatus = "want_to_read" | "reading" | "read" | null;
@@ -337,7 +338,7 @@ export async function getReadingStatsBooks(): Promise<ReadingStatsBook[]> {
     books: { main_category: string | null; genres: string[] | null };
   }[]).map((row) => ({
     completedAt: row.completed_at,
-    mainCategory: row.books.main_category ?? row.books.genres?.[0] ?? null,
+    mainCategory: row.books.main_category ?? getMostFrequentGenre(row.books.genres),
   }));
 }
 
