@@ -1,6 +1,4 @@
-type Props = {}
-
-const NotFound = ({}: Props) => {
+const NotFound = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <h1 className="text-9xl">404</h1>

@@ -1,4 +1,4 @@
-import { bookSchema } from '@/schemas/db/books-schema';
+import { bookSchema } from '@/schemas/book';
 import type { BookLanguage } from '@/constants/book-languages';
 import axios from 'axios';
 import rateLimit from 'axios-rate-limit';
@@ -15,7 +15,25 @@ const api = rateLimit(apiBase, {
   perMilliseconds: 1000,
 });
 
-function parseVolume(item: any) {
+type GoogleBooksVolume = {
+  id: string;
+  volumeInfo?: {
+    title?: string;
+    authors?: string[];
+    language?: string;
+    categories?: string[];
+    mainCategory?: string;
+    imageLinks?: { thumbnail?: string };
+    description?: string;
+    pageCount?: number;
+  };
+};
+
+type GoogleBooksVolumesResponse = {
+  items?: GoogleBooksVolume[];
+};
+
+function parseVolume(item: GoogleBooksVolume) {
   const info = item.volumeInfo;
 
   if (!info?.title) return null;
@@ -30,7 +48,9 @@ function parseVolume(item: any) {
     cover: info.imageLinks?.thumbnail ?? null,
     description: info.description ?? '',
     pageCount:
-      Number.isInteger(info.pageCount) && info.pageCount > 0
+      typeof info.pageCount === "number" &&
+      Number.isInteger(info.pageCount) &&
+      info.pageCount > 0
         ? info.pageCount
         : null,
   });
@@ -45,7 +65,7 @@ function logGoogleBooksError(error: unknown) {
 
 export async function getBooks(query: string, language: BookLanguage = 'en') {
   try {
-    const { data } = await api.get('/volumes', {
+    const { data } = await api.get<GoogleBooksVolumesResponse>('/volumes', {
       params: {
         q: `intitle:${query}`,
         langRestrict: language,
@@ -55,7 +75,7 @@ export async function getBooks(query: string, language: BookLanguage = 'en') {
       },
     });
 
-    return (data.items ?? []).flatMap((item: any) => {
+    return (data.items ?? []).flatMap((item) => {
       const book = parseVolume(item);
       if (!book) return [];
 
@@ -70,7 +90,9 @@ export async function getBooks(query: string, language: BookLanguage = 'en') {
 
 export async function getBookById(externalId: string) {
   try {
-    const { data } = await api.get(`/volumes/${encodeURIComponent(externalId)}`);
+    const { data } = await api.get<GoogleBooksVolume>(
+      `/volumes/${encodeURIComponent(externalId)}`
+    );
     const book = parseVolume(data);
 
     if (!book) throw new Error("Book not found");

@@ -1,4 +1,4 @@
-import LibraryList from "./library-list";
+import LibraryList from "@/components/books/library-list";
 
 const CurrentlyReading = () => (
   <LibraryList title="Currently Reading" filter={{ status: "reading" }} />
