@@ -1,7 +1,8 @@
 import { Star } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import type { LibraryBook } from "@/api/supabase";
-import { Card } from "./ui/card";
+import { Card } from "@/components/ui/card";
+import { getIndividualGenres } from "@/lib/book-genres";
 
 type Props = {
   book: LibraryBook;
@@ -35,6 +36,7 @@ const BookCard = ({ book }: Props) => {
                 src={book.cover}
                 alt={`Cover of ${book.name}`}
                 className="aspect-2/3 w-full rounded-md bg-muted object-cover shrink-0"
+                loading="lazy"
               />
             ) : (
               <div className="flex aspect-2/3 w-full items-center justify-center rounded-md bg-muted px-2 text-center text-sm text-muted-foreground">
@@ -52,22 +54,19 @@ const BookCard = ({ book }: Props) => {
             <p className="text-sm text-muted-foreground">
               {book.authors.join(", ") || "Unknown author"}
             </p>
-            <div className="flex flex-wrap gap-1.5">
-              {book.genres.slice(0, 3).map((genre) => (
-                <span key={genre} className="rounded-xl bg-accent/20 px-2 py-0.5 text-xs">
+            <div className="flex flex-col gap-2">
+              {getIndividualGenres(book.genres).slice(0, 3).map((genre) => (
+                <span key={genre} className="w-fit rounded-xl bg-accent/20 px-2 py-0.5 text-sm">
                   {genre}
                 </span>
               ))}
             </div>
             <div className="mt-auto space-y-2">
-              {pathname === '/all-books' ? (
+              {pathname === "/all-books" && (
                 <p className="rounded-lg bg-accent/20 px-2 py-1 text-center text-sm font-medium">
                   {statusLabel}
                 </p>
-              ) :
-                <>
-                </>
-              }
+              )}
               {book.status === "reading" && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">

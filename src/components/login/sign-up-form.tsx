@@ -7,11 +7,9 @@ import { useNavigate } from 'react-router'
 import type z from 'zod'
 
 
-type Props = {}
-
 type SignUpFields = z.infer<typeof signUpSchema>
 
-const SignUpForm = ({ }: Props) => {
+const SignUpForm = () => {
 
    const navigate = useNavigate()
 

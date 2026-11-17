@@ -1,4 +1,4 @@
-import SortBy from "../sort-by";
+import SortBy from "@/components/layout/sort-by";
 
 type Props = {
   title: string;

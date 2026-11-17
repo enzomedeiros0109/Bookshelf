@@ -7,21 +7,19 @@ import CheckEmail from '@/components/login/check-email'
 import ForgotPasswordForm from '@/components/login/forgot-password'
 import NewPasswordForm from '@/components/login/new-password-form'
 import NotFound from '@/pages/not-found'
-import Favorites from '@/components/layout/home-outlets/favorites'
-import WantToRead from '@/components/layout/home-outlets/want-to-read'
-import CurrentlyReading from '@/components/layout/home-outlets/currently-reading'
-import AllBooks from '@/components/layout/home-outlets/all-books'
-import Read from '@/components/layout/home-outlets/read'
+import Favorites from '@/pages/app/favorites'
+import WantToRead from '@/pages/app/want-to-read'
+import CurrentlyReading from '@/pages/app/currently-reading'
+import AllBooks from '@/pages/app/all-books'
+import Read from '@/pages/app/read'
 import Landing from '@/pages/landing'
-import Home from '@/pages/home'
-import BookDetail from '@/pages/book-detail'
-import Settings from '@/components/layout/home-outlets/settings'
-import Profile from '@/components/layout/home-outlets/profile'
-import Charts from '@/components/layout/home-outlets/charts'
+import Home from '@/pages/app/home'
+import BookDetail from '@/pages/app/book-detail'
+import Settings from '@/pages/app/settings'
+import Profile from '@/pages/app/profile'
+import Charts from '@/pages/app/charts'
 
-type Props = {}
-
-export const AppRoutes = ({ }: Props) => {
+export const AppRoutes = () => {
 
    return (
       <Routes>

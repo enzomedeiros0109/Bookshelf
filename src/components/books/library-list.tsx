@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserLibrary, type LibraryFilter } from "@/api/supabase";
 import { useAuthContext } from "@/context/auth-context";
-import BookCard from "@/components/book-card";
+import BookCard from "./book-card";
 import OutletHeader from "./outlet-header";
 
 type Props = {
