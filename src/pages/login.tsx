@@ -2,7 +2,9 @@ import Logo from '@/components/layout/logo'
 
 import { Outlet } from 'react-router'
 
-const Login = () => {
+type Props = {}
+
+const Login = ({}: Props) => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">

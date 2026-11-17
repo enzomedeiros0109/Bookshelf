@@ -1,21 +1,10 @@
 import { supabase } from "@/lib/supabase-client";
 import { getMostFrequentGenre } from "@/lib/book-genres";
-import type { BookSchema } from "@/schemas/book";
+import type { BookSchema } from "@/schemas/db/books-schema";
 
 export type ReadingStatus = "want_to_read" | "reading" | "read" | null;
 
-export type LibraryBook = Pick<
-  BookSchema,
-  "externalId" | "name" | "authors" | "genres" | "cover"
-> & {
-  id: string;
-  status: ReadingStatus;
-  isFavorite: boolean;
-  pagesRead: number;
-  totalPages: number | null;
-};
-
-export type SavedBookState = {
+export type LibraryBook = BookSchema & {
   id: string;
   status: ReadingStatus;
   isFavorite: boolean;
@@ -46,17 +35,15 @@ export type ReadingStatsBook = {
   mainCategory: string | null;
 };
 
-export type ReadingStatsYear = {
-  completedAt: string | null;
-};
-
 type CatalogRow = {
-  provider: string;
+  id: string;
   provider_book_id: string;
   title: string;
   authors: string[] | null;
   genres: string[] | null;
+  main_category: string | null;
   cover_url: string | null;
+  description: string | null;
 };
 
 type UserBookRow = {
@@ -66,14 +53,6 @@ type UserBookRow = {
   pages_read: number;
   total_pages: number | null;
   books: CatalogRow | null;
-};
-
-type SavedUserBookRow = {
-  book_id: string;
-  status: ReadingStatus;
-  is_favorite: boolean;
-  pages_read: number;
-  total_pages: number | null;
 };
 
 async function getAuthenticatedUserId() {
@@ -96,8 +75,12 @@ function toLibraryBook(row: UserBookRow): LibraryBook | null {
     externalId: row.books.provider_book_id,
     name: row.books.title,
     authors: row.books.authors ?? [],
+    language: null,
     genres: row.books.genres ?? [],
+    mainCategory: row.books.main_category,
     cover: row.books.cover_url,
+    description: row.books.description ?? "",
+    pageCount: row.total_pages,
     status: row.status,
     isFavorite: row.is_favorite,
     pagesRead: row.pages_read ?? 0,
@@ -144,7 +127,7 @@ export async function getUserLibrary(filter: LibraryFilter = {}) {
   let query = supabase
     .from("user_books")
     .select(
-      "book_id,status,is_favorite,pages_read,total_pages,books!inner(provider,provider_book_id,title,authors,genres,cover_url)"
+      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,main_category,cover_url,description)"
     )
     .eq("user_id", userId)
     .eq("books.provider", "google_books");
@@ -161,14 +144,12 @@ export async function getUserLibrary(filter: LibraryFilter = {}) {
     .filter((book): book is LibraryBook => book !== null);
 }
 
-export async function getUserBookByExternalId(
-  externalId: string
-): Promise<SavedBookState | null> {
+export async function getUserBookByExternalId(externalId: string) {
   const userId = await getAuthenticatedUserId();
   const { data, error } = await supabase
     .from("user_books")
     .select(
-      "book_id,status,is_favorite,pages_read,total_pages,books!inner(provider,provider_book_id)"
+      "book_id,status,is_favorite,pages_read,total_pages,books!inner(id,provider_book_id,title,authors,genres,main_category,cover_url,description)"
     )
     .eq("user_id", userId)
     .eq("books.provider", "google_books")
@@ -178,14 +159,7 @@ export async function getUserBookByExternalId(
   if (error) throw error;
   if (!data) return null;
 
-  const row = data as unknown as SavedUserBookRow;
-  return {
-    id: row.book_id,
-    status: row.status,
-    isFavorite: row.is_favorite,
-    pagesRead: row.pages_read,
-    totalPages: row.total_pages,
-  };
+  return toLibraryBook(data as unknown as UserBookRow);
 }
 
 export async function saveBookToLibrary(
@@ -308,11 +282,13 @@ export async function saveBookToLibrary(
 
   return {
     id: bookId,
+    ...book,
+    pageCount: totalPages,
     status,
     isFavorite,
     pagesRead,
     totalPages,
-  } satisfies SavedBookState;
+  } satisfies LibraryBook;
 }
 
 export async function getReadingGoalSummary(year: number): Promise<ReadingGoalSummary> {
@@ -347,36 +323,13 @@ export async function getReadingGoalSummary(year: number): Promise<ReadingGoalSu
   };
 }
 
-export async function getReadingStatsYears(): Promise<ReadingStatsYear[]> {
+export async function getReadingStatsBooks(): Promise<ReadingStatsBook[]> {
   const userId = await getAuthenticatedUserId();
-  const { data, error } = await supabase
-    .from("user_books")
-    .select("completed_at")
-    .eq("user_id", userId)
-    .eq("status", "read");
-
-  if (error) throw error;
-
-  return ((data ?? []) as unknown as {
-    completed_at: string | null;
-  }[]).map((row) => ({
-    completedAt: row.completed_at,
-  }));
-}
-
-export async function getReadingStatsBooks(year: number): Promise<ReadingStatsBook[]> {
-  if (!Number.isInteger(year)) throw new Error("Reading stats year must be an integer");
-
-  const userId = await getAuthenticatedUserId();
-  const startOfYear = new Date(year, 0, 1).toISOString();
-  const startOfNextYear = new Date(year + 1, 0, 1).toISOString();
   const { data, error } = await supabase
     .from("user_books")
     .select("completed_at,books!inner(main_category,genres)")
     .eq("user_id", userId)
-    .eq("status", "read")
-    .gte("completed_at", startOfYear)
-    .lt("completed_at", startOfNextYear);
+    .eq("status", "read");
 
   if (error) throw error;
 

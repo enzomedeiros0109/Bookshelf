@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router'
 import { emailSchema } from '@/schemas/email-schema'
 import { supabase } from '@/lib/supabase-client'
 
+type Props = {}
+
 type emailField = z.infer<typeof emailSchema>
 
-const ForgotPasswordForm = () => {
+const ForgotPasswordForm = ({ }: Props) => {
 
   const navigate = useNavigate()
 
