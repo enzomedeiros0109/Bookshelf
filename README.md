@@ -1,66 +1,32 @@
-# Bookshelf
+# React + TypeScript + Vite
 
-Bookshelf is a reading tracker for organizing books, tracking reading progress, and setting yearly reading goals.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Project structure
+Currently, two official plugins are available:
 
-```text
-public/                  Static public files
-src/
-  api/                    Google Books and Supabase requests
-  assets/                 Images and icons
-  components/             Reusable UI, layout, login, and book components
-  constants/              Shared constants, including book languages
-  context/                React authentication context
-  hooks/                  Reusable React hooks
-  lib/                    Supabase client and shared utilities
-  pages/                  Application pages
-  routes/                 Route definitions and route guards
-  schemas/                Zod schemas, including database schemas
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
 
-## Requirements
-
-- Node.js
-- pnpm
-
-## Installation
-
-Install the project dependencies and create a local environment file:
-
-```sh
-pnpm install
-cp .env.example .env
-```
-
-Fill in the values in `.env`, then start the development server:
-
-```sh
-pnpm dev
-```
-
-## Commands
-
-```sh
-pnpm dev      # Start the development server
-pnpm build    # Type-check and build the app
-pnpm lint     # Run Oxlint
-pnpm preview  # Preview the production build
-```
-
-## APIs
-
-- **Google Books API** provides book search results and book details.
-- **Supabase** provides authentication and database access for the user's library and reading goals.
-
-## Environment variables
-
-`.env.example` shows the required variable names and placeholder values:
-
-```env
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key-or-anon-key
-VITE_GOOGLE_BOOKS_API_KEY=your-google-api-key
-```
-
-Use your own project values in `.env`. Do not put Supabase secret or service-role keys in `VITE_` variables; Vite exposes those variables to browser code.
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.

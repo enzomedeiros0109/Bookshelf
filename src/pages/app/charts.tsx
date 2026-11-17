@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, Pie, PieChart, Tooltip, XAxis, YAxis } from "recharts";
 import { CalendarDays } from "lucide-react";
-import { getReadingStatsBooks } from "@/api/supabase";
+import { getReadingStatsBooks, getReadingStatsYears } from "@/api/supabase";
 import { useAuthContext } from "@/context/auth-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
@@ -30,32 +30,32 @@ const Charts = () => {
   const { user } = useAuthContext();
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const yearsQuery = useQuery({
+    queryKey: ["reading-stats-years", user?.id],
+    queryFn: getReadingStatsYears,
+    enabled: Boolean(user?.id),
+  });
   const booksQuery = useQuery({
-    queryKey: ["reading-stats-books", user?.id],
-    queryFn: getReadingStatsBooks,
+    queryKey: ["reading-stats-books", user?.id, selectedYear],
+    queryFn: () => getReadingStatsBooks(selectedYear),
     enabled: Boolean(user?.id),
   });
 
   const availableYears = useMemo(() => {
     const years = new Set<number>([currentYear]);
-    for (const book of booksQuery.data ?? []) {
-      if (!book.completedAt) continue;
-      const date = new Date(book.completedAt);
+    for (const readingYear of yearsQuery.data ?? []) {
+      if (!readingYear.completedAt) continue;
+      const date = new Date(readingYear.completedAt);
       if (!Number.isNaN(date.getTime())) years.add(date.getFullYear());
     }
     return [...years].sort((left, right) => right - left);
-  }, [booksQuery.data, currentYear]);
+  }, [yearsQuery.data, currentYear]);
 
-  const completedBooks = useMemo(
-    () => (booksQuery.data ?? []).filter((book) => {
-      if (!book.completedAt) return false;
-      const date = new Date(book.completedAt);
-      return !Number.isNaN(date.getTime()) && date.getFullYear() === selectedYear;
-    }),
-    [booksQuery.data, selectedYear],
-  );
-
-  const undatedBooksCount = (booksQuery.data ?? []).filter((book) => !book.completedAt).length;
+  const completedBooks = booksQuery.data ?? [];
+  const undatedBooksCount = (yearsQuery.data ?? []).filter((book) => !book.completedAt).length;
+  const isStatsLoading = yearsQuery.isLoading || booksQuery.isLoading;
+  const statsError = yearsQuery.error ?? booksQuery.error;
+  const hasStatsError = yearsQuery.isError || booksQuery.isError;
 
   const monthlyData = useMemo(() => {
     const monthlyCounts = Array.from({ length: 12 }, (_, month) => ({
@@ -65,7 +65,8 @@ const Charts = () => {
     }));
 
     for (const book of completedBooks) {
-      const month = new Date(book.completedAt as string).getMonth();
+      if (!book.completedAt) continue;
+      const month = new Date(book.completedAt).getMonth();
       monthlyCounts[month].books += 1;
     }
 
@@ -140,9 +141,9 @@ const Charts = () => {
         </Select>
       </header>
 
-      {booksQuery.isError && (
+      {hasStatsError && (
         <p role="alert" className="text-sm text-destructive">
-          {booksQuery.error instanceof Error ? booksQuery.error.message : "Could not load reading statistics."}
+          {statsError instanceof Error ? statsError.message : "Could not load reading statistics."}
         </p>
       )}
 
@@ -152,9 +153,9 @@ const Charts = () => {
             <CardTitle className="text-lg">Genres Read</CardTitle>
           </CardHeader>
           <CardContent>
-            {booksQuery.isLoading ? (
+            {isStatsLoading ? (
               <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">Loading reading data...</div>
-            ) : booksQuery.isError ? (
+            ) : hasStatsError ? (
               <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">Reading data is unavailable.</div>
             ) : genreData.length === 0 ? (
               <div className="flex h-64 items-center justify-center text-center text-sm text-muted-foreground">
@@ -193,9 +194,9 @@ const Charts = () => {
             <CardTitle className="text-lg">Books Read by Month</CardTitle>
           </CardHeader>
           <CardContent>
-            {booksQuery.isLoading ? (
+            {isStatsLoading ? (
               <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">Loading reading data...</div>
-            ) : booksQuery.isError ? (
+            ) : hasStatsError ? (
               <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">Reading data is unavailable.</div>
             ) : completedBooks.length === 0 ? (
               <div className="flex h-64 items-center justify-center text-center text-sm text-muted-foreground">
@@ -218,7 +219,7 @@ const Charts = () => {
         </Card>
       </div>
 
-      {undatedBooksCount > 0 && !booksQuery.isLoading && !booksQuery.isError && (
+      {undatedBooksCount > 0 && !isStatsLoading && !hasStatsError && (
         <p className="text-xs text-muted-foreground">
           {undatedBooksCount} read {undatedBooksCount === 1 ? "book has" : "books have"} no completion date and {undatedBooksCount === 1 ? "is" : "are"} excluded from yearly charts.
         </p>

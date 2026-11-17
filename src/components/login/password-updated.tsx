@@ -1,9 +1,7 @@
 import { Check } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
-type Props = {}
-
-const PasswordUpdated = ({ }: Props) => {
+const PasswordUpdated = () => {
 
    const navigate = useNavigate()
 
