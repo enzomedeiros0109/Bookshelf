@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router"
 import { useAuthContext } from "@/context/auth-context"
-import { getInitials } from "@/lib/formatters"
+import { getInitials } from "@/hooks/use-get-initials"
 
 const Header = () => {
 

@@ -7,9 +7,11 @@ import { Link, useNavigate } from 'react-router'
 import { supabase } from '@/lib/supabase-client'
 import { useEffect } from 'react'
 
+type Props = {}
+
 type LoginFields = z.infer<typeof loginSchema>
 
-const LoginForm = () => {
+const LoginForm = ({ }: Props) => {
   const navigate = useNavigate()
 
   const {

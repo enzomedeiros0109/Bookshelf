@@ -1,5 +1,7 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
+type Props = {}
+
 const items = [
   { label: "Newest first", value: "newest" },
   { label: "Oldest first", value: "oldest" },
@@ -8,7 +10,7 @@ const items = [
   { label: "Recently added", value: "recently-added" },
 ]
 
-const SortBy = () => {
+const SortBy = ({}: Props) => {
    return (
       <Select items={items}>
          <SelectTrigger className="w-45 bg-card">

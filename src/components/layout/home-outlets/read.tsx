@@ -1,4 +1,4 @@
-import LibraryList from "@/components/books/library-list";
+import LibraryList from "./library-list";
 
 const Read = () => <LibraryList title="Read" filter={{ status: "read" }} />;
 
