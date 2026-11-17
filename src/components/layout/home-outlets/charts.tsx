@@ -13,13 +13,6 @@ const monthNames = Array.from({ length: 12 }, (_, month) =>
   new Intl.DateTimeFormat(undefined, { month: "long" }).format(new Date(2024, month, 1)),
 );
 
-type GenreSlice = {
-  name: string;
-  books: number;
-  color: string;
-  percent: number;
-};
-
 function normalizeCategory(mainCategory: string | null) {
   const parts = (mainCategory ?? "")
     .split("/")
